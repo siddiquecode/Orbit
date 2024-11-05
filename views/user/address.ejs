@@ -1,0 +1,335 @@
+    
+    <%- include('../partials/header') %>
+    
+    <style>
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .a_sidebar {
+            margin-left: -80px;
+            width: 280px;
+            padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            background-color: #e2e2e2;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.075);
+        }
+
+        .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: #db710e;
+        }
+
+        .nav-links {
+            padding-top: 0.625rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
+            padding: 0.625rem;
+            width: 200px;
+        }
+
+        .nav-link i{
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            color: blue;
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: #000000;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            /* width: calc(100% - 280px); */
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-left: 1rem;
+            /* height: 100vh; */
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .address-container {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.18);
+        }
+
+        .add-address {
+            display: flex;
+            align-items: center;
+            color: #3182ce;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .add-address .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.5rem;
+        }
+
+        .address-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin-top: 15px;
+        }
+
+        .address-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .address-type {
+            background-color: #ccc;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .address-body {
+            margin-bottom: 10px;
+        }
+
+        .address-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .address-details {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .address-phone {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .address-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .edit-btn {
+            background-color: #6c63ff;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .empty_address{
+            width: auto;
+            height: 350px;
+        }
+
+        .empty_address img{
+            width: 30%;
+            transform: translateY(20px);
+            margin-left: 270px;
+        }
+
+        .empty_address p{
+            font-size: 20px;
+            color: rgba(100, 89, 69, 0.829);
+            margin-left: 180px;
+            font-weight: 800;
+            transform: translateY(-7px);
+        }
+
+    </style>
+    
+    <div class="main-container">
+        <div class="wrapper">
+
+            <div class="a_sidebar">
+                <div class="profile">
+                    <div class="profile-img"> <img src="/images/dp.jpg" alt=""></div>
+                    
+                    <p class="profile-name">Hello, <span class="highlight"><%= user.firstname %></span></p>
+                </div>
+                <div class="nav-links">
+                    <a href="/userprofile" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/userorders" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="/useraddress" class="nav-link active">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>My Address</span>
+                    </a>
+                    <a href="/userwishlist" class="nav-link">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Wish List</span>
+                    </a>
+                    <a href="/userwallet" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                    <a href="/usercoupon" class="nav-link">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Coupon</span>
+                    </a>
+                    <a href="/userlogout" class="nav-link">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <h1 class="page-title">Manage Addresses</h1>
+            
+                <div class="address-container">
+                    <a href="/Addaddress" class="add-address">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        ADD A NEW ADDRESS
+                    </a>
+                </div>
+            
+                <% if (address.length === 0) { %>
+                    <div class="empty_address">
+                        <img src="/images/emptyAddress.png" alt="">
+                        <p>No addresses found. Please add an address.</p>
+                    </div>
+                <% } else { %>
+                    <% address.forEach(function(addr) { %>
+                        <div class="address-card">
+                            <div class="address-header">
+                                <span class="address-type"><%= addr.type || 'Home' %></span>
+                            </div>
+                            <div class="address-body">
+                                <p class="address-name"><%= addr.name %></p>
+                                <p class="address-details">
+                                    <%= addr.address %>, <%= addr.locality %>, <%= addr.district %>, <%= addr.state %> - <%= addr.pincode %>
+                                </p>
+                                <p class="address-phone">Ph no: <%= addr.mobileNumber %></p>
+                                <% if (addr.alternateMobile) { %>
+                                    <p class="address-phone">Alternate Ph no: <%= addr.alternateMobile %></p>
+                                <% } %>
+                            </div>
+                            <div class="address-actions">
+                                <a href="/updateAddress/<%= addr._id %>"><button class="edit-btn">Edit</button></a>
+                                <form class="delete-address-form" action="/useraddress/<%= addr._id %>?_method=DELETE" method="POST">
+                                    <button type="button" class="delete-btn" data-id="<%= addr._id %>">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>                        
+        </div>
+    </div>
+
+    <script>
+        
+        // sweet alert for delete address
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                const form = this.closest('form');
+                const addressId = this.getAttribute('data-id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Address Deleted',
+                            text: 'Your address has been deleted successfully.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                        setTimeout(() => {
+                            form.submit();
+                        }, 1500);
+                    }
+                });
+            });
+        });
+
+    </script>
+    
+    <%- include('../partials/footer') %>

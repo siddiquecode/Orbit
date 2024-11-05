@@ -1,0 +1,411 @@
+    
+    <%- include('../partials/header', { isLoggedIn, user }) %>
+
+
+    <style>
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .order-details {
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .section {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            background-color: #15605B;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 10px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .section-number {
+            background-color: #19a198;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            font-weight: bold;
+        }
+
+        .section-content {
+            padding: 15px;
+            position: relative;
+        }
+        .address-container {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.18);
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            color: #3182ce;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .address-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-row input,
+        .form-row textarea {
+            width: 48%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .form-row textarea {
+            width: 100%;
+            resize: none;
+        }
+
+        .address-type {
+            margin-bottom: 20px;
+        }
+
+        .address-type label {
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .cancel-button {
+            color: #0703f1;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.479);
+            border-radius: 3px;
+            margin-right: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .save-button {
+            background-color: #2825d6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #4747c9c9;
+        }
+
+        .selected-address p {
+            margin: 5px 0;
+        }
+
+        .change-button {
+            color: #007bff;
+            font-size: 14px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.247);
+            padding: 5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .cchange-button {
+            color: #007bff;
+            font-size: 14px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.247);
+            padding: 5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            padding: 10px;
+        }
+
+        .address-option {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .address-option:last-child {
+            border-bottom: none;
+        }
+
+        .deliver-here-button {
+            background-color: #6b46c1;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .edit-address {
+            color: #007bff;
+            margin-left: 120px;
+            text-decoration: none;
+            border: 1px solid rgba(0, 0, 0, 0.247);
+            padding: 5px;
+            font-weight: 700;
+        }
+
+        .edit-address:hover {
+            text-decoration: none;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-item-image {
+            width: 200px;
+            height: 200px;
+            margin-right: 25px;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-btn {
+            background-color: #ddd;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .order-summary-footer {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .continue-btn {
+            background-color: #6b46c1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .quantity-selector button {
+            width: 40px;
+            height: 40px;
+            background-color: #64606025;
+            font-size: 20px;
+            line-height: 1;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .quantity-selector button:active {
+            background-color: #f0f0f0;
+        }
+
+        .payment-option {
+            margin-bottom: 15px;
+        }
+
+        .payment-option label {
+            display: block;
+            cursor: pointer;
+        }
+
+        .payment-option input {
+            margin-right: 10px;
+        }
+
+        .payment-option span {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .continue-button {
+            width: 30%;
+            margin-left: 70%;
+            padding: 15px;
+            background-color: #6b46c1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .continue-button:hover {
+            background-color: #804ff1;
+        }
+
+        .price-details {
+            width: 30%;
+            padding: 20px;
+            margin-left: 1rem;
+            width: 400px;
+            height: 350px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .price-details h4 {
+            margin-top: 0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .free-text {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <div class="profile-container">
+        <div class="wrapper">
+    
+            <div class="order-details">
+                <!-- Delivery Address Section -->
+                <div class="section">
+                    <div class="section-header">
+                      <span class="section-number">1</span>
+                      <span class="section-title">Delivery Address</span>
+                    </div>
+                    <div class="section-content">
+                      <div class="address-container">
+                        <h2 class="title">EDIT ADDRESS</h2>
+                        <form action="/checkoutAddress/<%= address._id %>" method="POST" class="address-form">
+                            <input type="hidden" name="productId" value="<%= product ? product._id : '' %>">
+                          <div class="form-row">
+                            <input type="text" name="name" value="<%= address ? address.name : '' %>" placeholder="Name">
+                            <input type="text" name="mobile" value="<%= address ? address.mobileNumber : '' %>" placeholder="10 digit mobile number">
+                          </div>
+                          <div class="form-row">
+                            <input type="text" name="pincode" value="<%= address ? address.pincode : '' %>" placeholder="Pincode">
+                            <input type="text" name="locality" value="<%= address ? address.locality : '' %>" placeholder="Locality">
+                          </div>
+                          <div class="form-row">
+                            <textarea name="address" rows="3" placeholder="Address (Area and Street)"><%= address ? address.address : '' %></textarea>
+                          </div>
+                          <div class="form-row">
+                            <input type="text" name="city" value="<%= address ? address.district : '' %>" placeholder="City / District / Town">
+                            <input type="text" name="state" value="<%= address ? address.state : '' %>" placeholder="State">
+                          </div>
+                          <div class="form-row">
+                            <input type="text" name="landmark" value="<%= address ? address.landmark : '' %>" placeholder="Landmark (Optional)">
+                            <input type="text" name="alternate_phone" value="<%= address ? address.alternateMobile : '' %>" placeholder="Alternate Phone (Optional)">
+                          </div>
+                          <div class="form-row buttons">
+                            <button type="button" class="cancel-button" id="cancelBtn">CANCEL</button>
+                            <button type="submit" class="save-button">Save</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Details Section -->
+            <div class="price-details">
+                <h4>Price Details</h4>
+                <div class="price-row">
+                    <span>Price</span>
+                    <span>_____</span>
+                </div>
+                <div class="price-row">
+                    <span>Delivery Charge</span>
+                    <span class="free-text">_____</span>
+                </div>
+                <div class="price-row">
+                    <span>Amount Payable</span>
+                    <span>_____</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+          window.location.href = '/checkout';
+        });
+        
+    </script>
+
+    <%- include('../partials/footer') %>

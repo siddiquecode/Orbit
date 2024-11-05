@@ -1,0 +1,213 @@
+<%- include('../partials/header') %>
+
+<section id="prodetails" class="section-p1">
+  <div class="row">
+    <div class="single-pro-image">
+      <img
+        id="zoomImage"
+        src="<%= product.productImage[0] %>"
+        alt="<%= product.productName %>"
+      />
+    </div>
+    <div class="col">
+      <% product.productImage.slice(0).forEach((image, index) => { %>
+      <div class="small-img">
+        <img
+          src="<%= image %>"
+          alt="<%= product.productName %>"
+          class="sub-img"
+        />
+      </div>
+      <% }) %>
+    </div>
+  </div>
+  <div class="single-pro-details">
+    <% if (Message) { %>
+    <p style="color: red; font-weight: 700; font-size: 20px">
+      <%= Message %>
+    </p>
+    <% } %>
+    <h4 style="margin-top: 50px; font-weight: 700">
+      <%= product.productName %>
+    </h4>
+    <div class="des">
+      <h4
+        style="
+          margin-top: 20px;
+          margin-bottom: 20px;
+          font-weight: 600;
+          text-decoration: line-through;
+        "
+      >
+        Original Price: ₹<%= product.price %>
+      </h4>
+      <h6 style="font-size: 14px;">
+        Product Discount: <%= product.discount || 0 %>%
+      </h6>
+      <h6 style="font-size: 14px;">
+        Category Discount: <%= product.category.discount || 0 %>%
+      </h6>
+      <h4
+        style="
+          margin-top: 20px;
+          margin-bottom: 20px;
+          font-weight: 600;
+          color: green;
+        "
+      >
+        Final Price: ₹<%= discountedPrice.toFixed(2) %>
+      </h4>
+      <h6
+        style="
+          font-size: 16px;
+          margin-top: 20px;
+          margin-bottom: 119px;
+          color: rgb(0, 59, 0);
+        "
+      >
+      <% if (product.stock > 0) { %>
+          <% if (product.stock <= 10) { %>
+              <p style="color: red; font-weight: 700;"><%= product.stockWarning %></p>
+          <% } else { %>
+              In Stock: <%= product.stock %> units 
+          <% } %>
+      <% } else { %>
+          <span style="color: red; font-weight: 800; font-size: 20px;">Out of Stock</span>
+      <% } %>
+      </h6>
+    </div>
+    <div style="display: inline-flex">
+      <form action="/cart/<%= product._id %>" method="POST">
+        <button type="submit" class="normal" id="ad">Add To Cart</button>
+      </form>
+      <form action="/cart/<%= product._id %>" method="POST">
+        <button type="submit" class="normal" id="by">Buy Now</button>
+      </form>
+    </div>
+
+    <div class="toggle-section">
+      <h4 style="margin-left: -250px" id="details-toggle" class="active-toggle">
+        Product Details
+      </h4>
+      <h4 style="margin-left: 400px" id="review-toggle">Review</h4>
+    </div>
+
+    <div id="product-details" class="toggle-content" style="height: auto;">
+      <span><%= product.description %></span>
+    </div>
+
+    <div id="product-review" class="toggle-content" style="display: none; height: auto;">
+      <div class="review">
+        <p><strong>Sarah Thompson</strong>: This starter kit has everything you need to set up your first aquarium! The instructions were easy to follow, and my fish seem to love it. Highly recommend for beginners!</p>
+        <p>Rating: ⭐⭐⭐⭐⭐</p>
+      </div>
+      <div class="review">
+        <p><strong>Michael Johnson</strong>: The LED light really brings my aquarium to life! The colors are vibrant, and the fish look amazing under this lighting. It was easy to install, and I appreciate the energy efficiency.</p>
+        <p>Rating: ⭐⭐⭐⭐</p>
+      </div>
+      <div class="review">
+        <p><strong>Emily Clark</strong>: A great value for the price. The filter is quiet, and the tank size is perfect for my living room. My fish have settled in well!</p>
+        <p>Rating: ⭐⭐⭐⭐⭐</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+
+  // subImage to main and zoom
+  document.querySelectorAll(".sub-img").forEach((img) => {
+    img.addEventListener("click", function () {
+      document.querySelectorAll(".sub-img").forEach((img) => {
+        img.style.border = "none";
+      });
+
+      document.getElementById("zoomImage").src = this.src;
+      this.style.border = "3px inset #000";
+    });
+  });
+
+  const imageContainer = document.querySelector(".single-pro-image");
+  const image = document.getElementById("zoomImage");
+  let scale = 1.5;
+
+  imageContainer.addEventListener("mouseenter", () => {
+    image.style.transform = `scale(${scale})`;
+  });
+
+  imageContainer.addEventListener("mouseleave", () => {
+    image.style.transform = "scale(1)";
+    image.style.transformOrigin = "center center";
+  });
+
+  imageContainer.addEventListener("mousemove", (event) => {
+    const { left, top, width, height } = imageContainer.getBoundingClientRect();
+    const x = ((event.clientX - left) / width) * 100;
+    const y = ((event.clientY - top) / height) * 100;
+    image.style.transformOrigin = `${x}% ${y}%`;
+    image.style.transform = scale(2);
+  });
+
+  // details toggle functionality
+  document.getElementById("details-toggle").addEventListener("click", function () {
+      const detailsContent = document.getElementById("product-details");
+      const reviewContent = document.getElementById("product-review");
+      const detailsToggle = document.getElementById("details-toggle");
+      const reviewToggle = document.getElementById("review-toggle");
+
+      if (detailsContent.style.display === "none") {
+        detailsContent.style.display = "block";
+        reviewContent.style.display = "none";
+
+        detailsToggle.classList.add("active-toggle");
+        reviewToggle.classList.remove("active-toggle");
+      }
+  });
+
+  // review toggle functionality
+  document.getElementById("review-toggle").addEventListener("click", function () {
+      const reviewContent = document.getElementById("product-review");
+      const detailsContent = document.getElementById("product-details");
+      const detailsToggle = document.getElementById("details-toggle");
+      const reviewToggle = document.getElementById("review-toggle");
+
+      if (reviewContent.style.display === "none") {
+        reviewContent.style.display = "block";
+        detailsContent.style.display = "none";
+
+        reviewToggle.classList.add("active-toggle");
+        detailsToggle.classList.remove("active-toggle");
+      }
+  });
+
+  // review height
+  document.addEventListener('DOMContentLoaded', function() {
+    const productDetails = document.getElementById('product-details');
+    const descriptionText = productDetails.querySelector('span');
+
+    const tempDiv = document.createElement('div');
+    tempDiv.style.visibility = 'hidden';
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.width = '1000px';
+    tempDiv.style.fontSize = getComputedStyle(descriptionText).fontSize;
+    tempDiv.style.lineHeight = getComputedStyle(descriptionText).lineHeight;
+    tempDiv.style.fontFamily = getComputedStyle(descriptionText).fontFamily;
+    tempDiv.innerHTML = descriptionText.innerHTML;
+    document.body.appendChild(tempDiv);
+
+    const descriptionHeight = tempDiv.offsetHeight;
+    document.body.removeChild(tempDiv);
+
+    const lineHeight = parseFloat(getComputedStyle(descriptionText).lineHeight);
+    const lineCount = Math.ceil(descriptionHeight / lineHeight);
+
+    if (lineCount <= 4) {
+      productDetails.style.height = '200px';
+    } else {
+      productDetails.style.height = '600px';
+    }
+  });
+
+</script>
+
+<%- include('../partials/footer') %>

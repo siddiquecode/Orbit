@@ -1,0 +1,311 @@
+    
+    <%- include('../partials/header') %>
+
+    <style>
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .w_sidebar {
+            margin-left: -80px;
+            width: 280px;
+            padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            background-color: #e2e2e2;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.075);
+        }
+
+        .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: #db710e;
+        }
+
+        .nav-links {
+            padding-top: 0.625rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
+            padding: 0.625rem;
+            width: 200px;
+        }
+
+        .nav-link i{
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            color: blue;
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: #000000;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-left: 1rem;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .wallet-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .wallet-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 1.1);
+            margin-bottom: 20px;
+        }
+
+        .balance-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        .balance-section div p {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .balance-section h2 {
+            font-size: 40px;
+            color: #4CAF50;
+        }
+
+        .transaction-history h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .transaction-table th,
+        .transaction-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .transaction-table th {
+            background-color: #f8f8f8;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .transaction-table td {
+            color: #333;
+        }
+
+        #status-completed {
+            font-weight: 800;
+            color: #4CAF50;
+        }
+
+        #status-debit{
+          font-weight: 800;
+          color: rgb(240, 14, 14);
+        }
+
+        #status-processing{
+            font-weight: 800;
+            color: rgb(6, 158, 163);
+        }
+
+        .transaction-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .wallet-pagination{
+            display: flex;
+            height: 50px;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+    </style>
+    
+    <div class="profile-container">
+        <div class="wrapper">
+
+            <div class="w_sidebar">
+                <div class="profile">
+                    <div class="profile-img"> <img src="/images/dp.jpg" alt=""></div>
+                    
+                    <p class="profile-name">Hello, <span class="highlight"><%= user.firstname %></span></p>
+                </div>
+                <div class="nav-links">
+                    <a href="/userprofile" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/userorders" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="/useraddress" class="nav-link">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>My Address</span>
+                    </a>
+                    <a href="/userwishlist" class="nav-link">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Wish List</span>
+                    </a>
+                    <a href="/userwallet" class="nav-link active">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                    <a href="/usercoupon" class="nav-link">
+                      <i class="fa-solid fa-ticket"></i>
+                      <span>Coupon</span>
+                    </a>
+                    <a href="/userlogout" class="nav-link">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <% if (wallet.transactions.length === 0) { %>
+                <h1 class="page-title">My Wallet</h1>
+                <div class="wallet-container">
+                  <div class="wallet-header">
+                    <div class="balance-section">
+                      <div>
+                        <p>Current Balance</p>
+                        <h2>₹<%= wallet.balance.toFixed(2) %></h2>
+                      </div>
+                    </div>
+                  </div>
+                  <% } else { %>
+                <h1 class="page-title">My Wallet</h1>
+                <div class="wallet-container">
+                  <div class="wallet-header">
+                    <div class="balance-section">
+                      <div>
+                        <p>Current Balance</p>
+                        <h2>₹<%= wallet.balance.toFixed(2) %></h2>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="transaction-history">
+                    <h2>Transaction History</h2>
+                      <table class="transaction-table">
+                        <thead>
+                          <tr>
+                            <th>Date of Transaction</th>
+                            <th>Description</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% wallet.transactions.forEach(transaction => { %>
+                            <tr>
+                              <td><%= new Date(transaction.timestamp).toDateString() %></td>
+                              <td><%= transaction.description %></td>
+                              <td>
+                                <% if (transaction.type === 'Credit') { %>
+                                  +<%= transaction.amount.toFixed(2) %>
+                                <% } else if (transaction.type === 'Debit') { %>
+                                  -<%= transaction.amount.toFixed(2) %>
+                                <% } else { %>
+                                  <%= transaction.amount.toFixed(2) %>
+                                <% } %>
+                              </td>
+                              <td id="<%= transaction.type === 'Credit' ? 'status-completed' : transaction.type === 'Debit' ? 'status-debit' : 'status-processing' %>">
+                                <%= transaction.type %>
+                              </td>
+                            </tr>
+                          <% }); %>
+                        </tbody>
+                      </table>
+                  </div>
+                  
+                  <div class="wallet-pagination">
+                    <!-- Previous Arrow -->
+                    <% if (currentPage > 1) { %>
+                      <a href="/userwallet?page=<%= currentPage - 1 %>" class="arrow-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </a>
+                    <% } else { %>
+                      <span class="arrow-btn disabled">
+                        <i class="fa-solid fa-arrow-left"></i>
+                      </span>
+                    <% } %>
+                    
+                    <!-- Next Arrow -->
+                    <% if (currentPage < totalPages) { %>
+                      <a href="/userwallet?page=<%= currentPage + 1 %>" class="arrow-btn">
+                        <i class="fa-solid fa-arrow-right"></i>
+                      </a>
+                    <% } else { %>
+                      <span class="arrow-btn disabled">
+                        <i class="fa-solid fa-arrow-right"></i>
+                      </span>
+                    <% } %>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>

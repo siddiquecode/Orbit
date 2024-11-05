@@ -1,0 +1,275 @@
+    
+    <%- include('../partials/header') %>
+    
+    <style>
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .a_sidebar {
+            margin-left: -80px;
+            width: 280px;
+            padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            background-color: #e2e2e2;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.075);
+        }
+
+        .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: #db710e;
+        }
+
+        .nav-links {
+            padding-top: 0.625rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
+            padding: 0.625rem;
+            width: 200px;
+        }
+
+        .nav-link i{
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            color: blue;
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: #000000;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            /* width: calc(100% - 280px); */
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-left: 1rem;
+            /* height: 100vh; */
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .address-container {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.18);
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            color: #3182ce;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .address-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-row input,
+        .form-row textarea {
+            width: 48%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .form-row textarea {
+            width: 100%;
+            resize: none;
+        }
+
+        .address-type {
+            margin-bottom: 20px;
+        }
+
+        .address-type label {
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .cancel-button {
+            color: #0703f1;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.479);
+            border-radius: 3px;
+            margin-right: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .save-button {
+            background-color: #2825d6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #4747c9c9;
+        }
+
+    </style>
+    
+    <div class="main-container">
+        <div class="wrapper">
+
+            <div class="a_sidebar">
+                <div class="profile">
+                    <div class="profile-img"> <img src="/images/dp.jpg" alt=""></div>
+                    
+                    <p class="profile-name">Hello, <span class="highlight"><%= user.firstname %></span></p>
+                </div>
+                <div class="nav-links">
+                    <a href="/userprofile" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/userorders" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="/useraddress" class="nav-link active">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>My Address</span>
+                    </a>
+                    <a href="/userwishlist" class="nav-link">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Wish List</span>
+                    </a>
+                    <a href="/userwallet" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                    <a href="/usercoupon" class="nav-link">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Coupon</span>
+                    </a>
+                    <a href="/userlogout" class="nav-link">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <h1 class="page-title">Manage Addresses</h1>
+                <div class="address-container">
+                    <h2 class="title">EDIT ADDRESS</h2>
+                    <form action="/updateAddress/<%= address._id %>" method="POST" class="address-form">
+                        <div class="form-row">
+                            <input type="text" name="name" value="<%= address.name %>" placeholder="Name" required>
+                            <input type="text" name="mobile" value="<%= address.mobileNumber %>" placeholder="10 digit mobile number" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" name="pincode" value="<%= address.pincode %>" placeholder="Pincode" required>
+                            <input type="text" name="locality" value="<%= address.locality %>" placeholder="Locality" required>
+                        </div>
+                        <div class="form-row">
+                            <textarea name="address" rows="3" placeholder="Address (Area and Street)" required><%= address.address %></textarea>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" name="city" value="<%= address.district %>" placeholder="City / District / Town" required>
+                            <input type="text" name="state" value="<%= address.state %>" placeholder="State" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" name="landmark" value="<%= address.landmark %>" placeholder="Landmark (Optional)">
+                            <input type="text" name="alternate_phone" value="<%= address.alternateMobile %>" placeholder="Alternate Phone (Optional)">
+                        </div>
+                        <div class="form-group address-type">
+                            <label>Address Type</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="addressType" value="home" <%= address.type === 'home' ? 'checked' : '' %>> Home</label>
+                                <label><input type="radio" name="addressType" value="work" <%= address.type === 'work' ? 'checked' : '' %>> work</label>
+                            </div>
+                        </div>
+                        <div class="form-row buttons">
+                            <a href="/useraddress"><button type="button" class="cancel-button">CANCEL</button></a>
+                            <button type="submit" class="save-button">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>

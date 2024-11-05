@@ -1,0 +1,837 @@
+<%- include('../partials/header') %>
+
+<style>
+
+    .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .o_sidebar {
+            margin-left: -80px;
+            width: 280px;
+            padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            background-color: #e2e2e2;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.075);
+        }
+
+        .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: #db710e;
+        }
+
+        .nav-links {
+            padding-top: 0.625rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
+            padding: 0.625rem;
+            width: 200px;
+        }
+
+        .nav-link i {
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            color: blue;
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: #000000;
+            border-radius: 5px;
+        }
+
+        .order-container {
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-left: 1rem;
+        }
+
+        .download-invoice-btn{
+            padding: 3px;
+            margin-left: 80%;
+            transform: translateY(-50px);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .order-summary{
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        .order-summary,
+        .delevery-details,
+        .products-container,
+        .payment-info {
+            margin-bottom: 20px;
+        }
+
+        .order-summary-item,
+        .delevery-details-item,
+        .payment-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .order-summary-item span:first-child,
+        .delevery-details-item span:first-child,
+        .payment-info-item span:first-child {
+            font-weight: 600;
+        }
+
+        .products-container {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .product-item img {
+            width: 130px;
+            height: 130px;
+            border-radius: 8px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .product-details {
+            color: #333;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .product-quantity,
+        .product-price {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .order-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin-left: 1rem;
+        }
+
+        #retry_payment{
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin-left: 1rem;
+        }
+
+        #return_order{
+          background-color: #4CAF50;
+        }
+
+        #return_order:hover {
+            background-color: #1d9123;
+        }
+
+        #cancel_order {
+            background-color: #FF6347;
+        }
+
+        #cancel_order:hover {
+            background-color: #FF4500;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding-left: 33%;
+            padding-top: 10%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .Ordermodal-content {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .Ordermodal-content h2 {
+            margin-top: 0;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        label {
+            margin-bottom: 15px;
+        }
+
+        #cancelOtherReasonContainer {
+            margin-top: 10px;
+        }
+
+        #cancelOtherReasonInput {
+            width: calc(100% - 16px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #cancelOrderModal button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #cancelCancelBtn{
+            background-color: #dc3545;
+        }
+
+        #otherReasonContainer {
+            margin-top: 10px;
+        }
+
+        #otherReasonInput {
+            width: calc(100% - 16px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #returnOrderModal button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: #28a745;
+        }
+
+        #cancel-btn {
+            background-color: #dc3545;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+</style>
+
+    <div class="main-container">
+        <div class="wrapper">
+            <div class="o_sidebar">
+                <div class="profile">
+                    <div class="profile-img"><img src="/images/dp.jpg" alt=""></div>
+                    <p class="profile-name">Hello, <span class="highlight"><%= user.firstname %></span></p>
+                </div>
+                <div class="nav-links">
+                    <a href="/userprofile" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/userorders" class="nav-link active">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="/useraddress" class="nav-link">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>My Address</span>
+                    </a>
+                    <a href="/userwishlist" class="nav-link">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Wish List</span>
+                    </a>
+                    <a href="/userwallet" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                    <a href="/usercoupon" class="nav-link">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Coupon</span>
+                    </a>
+                    <a href="/userlogout" class="nav-link">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="order-container">
+                <h1>Order Details</h1>
+                <a href="/order/<%= order._id %>/download-invoice"><button class="download-invoice-btn">Download Invoice</button></a>
+                
+                <!-- delevery Details Section -->
+                <div class="delevery-details">
+                    <h2>Delevery Address</h2>
+                
+                    <div class="delevery-details-item">
+                    <span>Recipient Name:</span>
+                    <span><%= order.deliveryAddress.name %></span>
+                    </div>
+                
+                    <div class="delevery-details-item">
+                    <span>Address:</span>
+                    <span>
+                        <%= order.deliveryAddress.address %>,<%= order.deliveryAddress.locality %>,<%= order.deliveryAddress.district %>,<%= order.deliveryAddress.state %>,<%= order.deliveryAddress.pincode %>
+                    </span>
+                    </div>
+                
+                    <div class="delevery-details-item">
+                    <span>Phone Number:</span>
+                    <span><%= order.deliveryAddress.mobileNumber %></span>
+                    </div>
+                </div>
+
+                <!-- Products Section -->
+                <div class="products-container">
+                    <h2>Products</h2>
+                    <% order.items.forEach(item => { %>
+                      <div class="product-item">
+                        <img src="<%= item.productId.productImage[0] %>" alt="Product Image" onclick="window.location.href='/productdetails/<%= item.productId._id %>'">
+                        <div class="product-details">
+                          <p class="product-name"><%= item.productId.productName %></p>
+                          <p class="product-quantity">Quantity: <%= item.quantity %></p>
+                          <p class="product-price">Price: ₹<%= item.discountedPrice.toFixed(2) %></p>
+                        </div>
+                      </div>
+                      
+                      <div class="order-summary-item" style="justify-content: flex-end; font-size: 18px;">
+                        <span>Order Status:</span>
+                        <% 
+                            let statusColor; 
+                            if (item.status === 'Delivered') {
+                                statusColor = '#4CAF50';
+                            } else if (item.status === 'Processing') {
+                                statusColor = 'rgb(6, 158, 163)';
+                            } else if (item.status === 'Pending' || item.status === 'Shipped') {
+                                statusColor = 'orange';
+                            } else if (item.status === 'Returned' || item.status === 'Cancelled') {
+                                statusColor = 'red';
+                            } else {
+                                statusColor = 'black'; // Default color
+                            }
+                        %>
+                        <span style="font-weight: 800; margin-left: 10px; color: <%= statusColor %>;">
+                            <%= item.status %>
+                        </span>
+                      </div>
+
+                      <!-- Order Actions Section -->
+                      <% if (order.paymentStatus !== 'Failed') { %>
+                        <div class="order-actions">
+                            <% if (item.status === 'Delivered') { %>
+                                <button class="action-btn" id="return_order_<%= item._id %>" data-order-id="<%= order._id %>" data-product-id="<%= item.productId._id %>">Return Order</button>
+                            <% } %>
+                            
+                            <% if (item.status === 'Pending' || item.status === 'Shipped') { %>
+                                <button class="action-btn" id="cancel_order_<%= item._id %>" data-order-id="<%= order._id %>" data-product-id="<%= item.productId._id %>">Cancel Order</button>
+                            <% } %>
+                        </div>
+                      <% } %>
+                    <% }); %>
+                </div>
+
+                <!-- Order Summary Section -->
+                <div class="order-summary">
+                    <h2>Order Summary</h2>
+                    <div class="order-summary-item">
+                      <span>Order ID:</span>
+                      <span><%= order._id %></span>
+                    </div>
+                    <div class="order-summary-item">
+                      <span>Order Date:</span>
+                      <span><%= new Date(order.orderedDate).toDateString() %></span>
+                    </div>
+                    <div class="order-summary-item">
+                      <span>Total Amount:</span>
+                      <span>₹<%= order.totalAmount.toFixed(2) %></span>
+                    </div>
+                    <div class="order-summary-item">
+                      <span>Payment Method:</span>
+                      <span><%= order.paymentMethod %></span>
+                    </div>
+                    <div class="order-summary-item">
+                        <span>Payment Status:</span>
+                        <% 
+                          let paymentstatusColor; 
+                          if (order.paymentStatus === 'Completed' || order.paymentStatus === 'Refunded') {
+                              paymentstatusColor = 'green';
+                          } else if (order.paymentStatus === 'Processing') {
+                              paymentstatusColor = 'rgb(6, 158, 163)';
+                          } else if (order.paymentStatus === 'Pending' || order.paymentStatus === 'Shipped') {
+                              paymentstatusColor = 'orange';
+                          } else if (order.paymentStatus === 'Failed') {
+                              paymentstatusColor = 'red';
+                          } else {
+                              paymentstatusColor = 'black'; // Default color
+                          }
+                        %>
+                        <span style="font-weight: 800; color: <%= paymentstatusColor %>;">
+                          <%= order.paymentStatus %>
+                        </span>
+                    </div>
+                    <div class="order-actions">
+                        <button id="retry_payment" style="display: <%= order.paymentStatus === 'Failed' ? 'block' : 'none' %>;">
+                            Retry Payment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Return Order Modal -->
+                <div id="returnOrderModal" class="modal" style="display: none;">
+                  <div class="Ordermodal-content">
+                    <h2>Select a reason for returning the order:</h2>
+                    <form id="returnOrderForm">
+                      <div>
+                        <input type="radio" id="reason1" name="returnReason" value="Item was damaged" checked>
+                        <label for="reason1">Item was damaged</label>
+                      </div>
+                      <div>
+                        <input type="radio" id="reason2" name="returnReason" value="Received the wrong item">
+                        <label for="reason2">Received the wrong item</label>
+                      </div>
+                      <div>
+                        <input type="radio" id="reason3" name="returnReason" value="Item no longer needed">
+                        <label for="reason3">Item no longer needed</label>
+                      </div>
+                      <div>
+                        <input type="radio" id="reason4" name="returnReason" value="Other">
+                        <label for="reason4">Other</label>
+                      </div>
+
+                      <div id="otherReasonContainer" style="display: none;">
+                        <label for="otherReasonInput">Please specify your reason:</label>
+                        <input id="otherReasonInput" name="otherReason" placeholder="Enter your reason here"style="padding: 8px; font-size: 16px;"></input>
+                      </div>
+
+                      <button type="button" id="cancel-btn">Cancel</button>
+                      <button type="submit" class="submit-btn">Submit</button>
+                    </form>
+                  </div>
+                </div>
+
+                <!-- Cancel Order Modal -->
+                <div id="cancelOrderModal" class="modal" style="display: none;">
+                    <div class="Ordermodal-content">
+                      <h2>Cancel Order</h2>
+                      <form id="cancelOrderForm">
+                        <div>
+                          <label>Why are you cancelling your order?</label>
+                          <div>
+                            <input type="radio" id="cancelReason1" name="cancelReason" value="Ordered by mistake" required checked>
+                            <label for="cancelReason1">Ordered by mistake</label>
+                          </div>
+                          <div>
+                            <input type="radio" id="cancelReason2" name="cancelReason" value="Found a better price" required>
+                            <label for="cancelReason2">Found a better price</label>
+                          </div>
+                          <div>
+                            <input type="radio" id="cancelReason3" name="cancelReason" value="Product no longer needed" required>
+                            <label for="cancelReason3">Product no longer needed</label>
+                          </div>
+                          <div>
+                            <input type="radio" id="cancelReason4" name="cancelReason" value="Other" required>
+                            <label for="cancelReason4">Other</label>
+                          </div>
+                        </div>
+                  
+                        <div id="cancelOtherReasonContainer" style="display: none; margin-top: 10px;">
+                          <label for="cancelOtherReasonInput">Please specify your reason:</label>
+                          <input type="text" id="cancelOtherReasonInput" name="cancelOtherReason" placeholder="Enter your reason here" style="padding: 8px; font-size: 16px;">
+                        </div>
+                  
+                        <div>
+                          <button type="button" id="cancelCancelBtn" class="cancel-btn">Cancel</button>
+                          <button type="submit" class="submit-btn">Submit</button>
+                        </div>
+                      </form>
+                    </div>
+                </div>                  
+  
+            </div>
+        </div>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // return order
+        document.querySelectorAll('[id^="return_order_"]').forEach(returnOrderButton => {
+            returnOrderButton.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                const productId = this.getAttribute('data-product-id');
+                const modal = document.getElementById('returnOrderModal');
+                modal.style.display = 'block';
+                this.style.display = 'none';
+
+                document.getElementById('returnOrderForm').addEventListener('submit', async function (event) {
+                    event.preventDefault();
+                    let selectedReason = document.querySelector('input[name="returnReason"]:checked').value;
+
+                    if (selectedReason === 'Other') {
+                        const otherReasonInput = document.getElementById('otherReasonInput').value.trim();
+                        if (!otherReasonInput) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Missing Reason',
+                                text: 'Please provide a reason for returning the order.',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                            return;
+                        }
+                        selectedReason = otherReasonInput;
+                    }
+
+                    modal.style.display = 'none';
+
+                    try {
+                        const response = await fetch(`/returnOrder/${orderId}/${productId}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ returnReason: selectedReason })
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Return Process Initiated',
+                                text: 'Return request received. Status is now Processing. Refund on the way.',
+                                timer: 3000,
+                                showConfirmButton: false
+                            }).then(() => window.location.reload());
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to submit return request. Please try again later.',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred. Please try again later.',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+        
+        // Other reason for returnorder
+        document.querySelectorAll('input[name="returnReason"]').forEach((radio) => {
+            radio.addEventListener('change', function () {
+                const otherReasonContainer = document.getElementById('otherReasonContainer');
+                if (this.value === 'Other') {
+                    otherReasonContainer.style.display = 'block';
+                } else {
+                    otherReasonContainer.style.display = 'none';
+                }
+            });
+        });
+
+        // cancel modal cancel button
+        document.getElementById('cancelCancelBtn').addEventListener('click', function () {
+            const modal = document.getElementById('cancelOrderModal');
+            modal.style.display = 'none';
+
+            const cancelOrderButtons = document.querySelectorAll('.action-btn[id^="cancel_order_"]');
+            cancelOrderButtons.forEach(function (button) {
+                button.style.display = 'block';
+            });
+
+            const selectedCancelReason = document.querySelector('input[name="cancelReason"]:checked');
+            if (selectedCancelReason) selectedCancelReason.checked = false;
+            document.getElementById('cancelOtherReasonInput').value = '';
+            document.getElementById('cancelOtherReasonContainer').style.display = 'none';
+        });
+
+        // cancel order
+        document.querySelectorAll('[id^="cancel_order_"]').forEach(cancelOrderButton => {
+            cancelOrderButton.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-order-id');
+                const productId = this.getAttribute('data-product-id');
+                const modal = document.getElementById('cancelOrderModal');
+                modal.style.display = 'block';
+                this.style.display = 'none';
+
+                document.getElementById('cancelOrderForm').addEventListener('submit', async function (event) {
+                    event.preventDefault();
+                    let selectedCancelReason = document.querySelector('input[name="cancelReason"]:checked').value;
+
+                    if (selectedCancelReason === 'Other') {
+                        const cancelOtherReasonInput = document.getElementById('cancelOtherReasonInput').value.trim();
+                        if (!cancelOtherReasonInput) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Missing Reason',
+                                text: 'Please provide a reason for cancelling the order.',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                            return;
+                        }
+                        selectedCancelReason = cancelOtherReasonInput;
+                    }
+
+                    modal.style.display = 'none';
+
+                    try {
+                        const response = await fetch(`/cancelOrder/${orderId}/${productId}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ cancelReason: selectedCancelReason })
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Order Cancelled',
+                                text: 'Your order cancellation request has been successfully submitted.',
+                                timer: 3000,
+                                showConfirmButton: false
+                            }).then(() => window.location.reload());
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to submit cancellation request. Please try again later.',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred. Please try again later.',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+        // return modal cancel button
+        document.getElementById('cancel-btn').addEventListener('click', function () {
+            const modal = document.getElementById('returnOrderModal');
+            modal.style.display = 'none';
+            
+            const returnOrderButtons = document.querySelectorAll('.action-btn[id^="return_order_"]');
+            returnOrderButtons.forEach(function (button) {
+                button.style.display = 'block';
+            });
+
+            const selectedReason = document.querySelector('input[name="returnReason"]:checked');
+            if (selectedReason) selectedReason.checked = false;
+            document.getElementById('otherReasonInput').value = '';
+            document.getElementById('otherReasonContainer').style.display = 'none';
+        });
+
+        // Other reason for cancellation
+        document.querySelectorAll('input[name="cancelReason"]').forEach((radio) => {
+            radio.addEventListener('change', function () {
+                const cancelOtherReasonContainer = document.getElementById('cancelOtherReasonContainer');
+                if (this.value === 'Other') {
+                    cancelOtherReasonContainer.style.display = 'block';
+                } else {
+                    cancelOtherReasonContainer.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // retery payment logic
+    document.getElementById('retry_payment').addEventListener('click', async () => {
+        try {
+            const response = await fetch("/retry-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId: "<%= order._id %>" })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.orderId && result.amount) {
+                const { orderId, amount } = result;
+
+                const options = {
+                    key: "<%= process.env.RAZORPAY_KEY_ID %>",
+                    amount: amount * 100,
+                    currency: "INR",
+                    name: "Orbit",
+                    description: "Retry Order Payment",
+                    order_id: orderId,
+                    handler: async function (response) {
+                        const verifyResponse = await fetch("/payment-success", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                orderId: "<%= order._id %>",
+                                paymentId: response.razorpay_payment_id,
+                            })
+                        });
+
+                        const verifyResult = await verifyResponse.json();
+
+                        if (verifyResponse.ok && verifyResult.success) {
+                            Swal.fire({
+                                title: 'Payment Successful',
+                                text: 'Your payment has been processed successfully.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Payment Failed',
+                                text: verifyResult.message || 'Your payment could not be completed. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            });
+                        }
+                    },
+                    modal: {
+                        ondismiss: function () {
+                            Swal.fire({
+                                title: 'Payment Cancelled',
+                                text: 'You have cancelled the payment. If you wish to proceed with the order, please try again.',
+                                icon: 'info',
+                                showConfirmButton: false,
+                                timer: 2500
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    theme: {
+                        color: '#F37254'
+                    }
+                };
+
+                const razorpay = new Razorpay(options);
+                razorpay.open();
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: result.message || 'An error occurred while retrying the payment.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        } catch (error) {
+            console.error("Retry payment error:", error);
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while retrying the payment. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            });
+        }
+    });
+
+    </script>
+
+    <%- include('../partials/footer') %>

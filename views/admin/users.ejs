@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Orbit UserManagement</title>
+    <link rel="stylesheet" href="/css/admin.css">
+
+    <style>
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        select{
+            padding: 6px;
+            background-color:  #00FF00;
+            border-radius: 3px;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: rgb(212, 3, 3)
+        }
+
+        #unblock {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            background-color:  #00ff00;
+        }
+        #block {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+            color: #ffffff;
+            background-color:  red;
+        }
+
+        #block:hover,#unblock:hover{
+            background-color: #ffffff41;
+            color: #000000;
+        }
+
+        #user{
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            color: white;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span>Orbit</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a id="user" class="active" href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
+                    <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
+                    <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
+                    <li><a href="/admin/getoffer"><i class="fa-solid fa-tag"></i> Offer Module</a></li>
+                    <li><a href="/admin/getcoupon"><i class="fa-solid fa-ticket"></i> Coupon Management</a></li>
+                    <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
+                </ul>
+            </nav>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h1>User Management</h1>
+            </header>
+            <br><br><br>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NO.</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% user.forEach((user,index) => { %>
+                            <tr>
+                                <td><%= (currentPage - 1) * itemsPerPage + index + 1 %></td>
+                                <td><%= user._id %></td>
+                                <td><%= user.firstname %></td>
+                                <td><%= user.email %></td>
+                                <td>
+                                    <% if (user.isBlocked) { %>
+                                        <form action="/admin/unblockuser/<%= user._id %>" method="POST">
+                                            <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
+                                        </form>
+                                    <% } else { %>
+                                        <form action="/admin/blockuser/<%= user._id %>" method="POST">
+                                            <button type="submit" id="block" class="action-btn block">Block</button>
+                                        </form>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <!-- Previous Arrow -->
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>" class="arrow-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                <% } else { %>
+                    <span class="arrow-btn disabled">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                <% } %>
+            
+                <!-- Next Arrow -->
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>" class="arrow-btn">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                <% } else { %>
+                    <span class="arrow-btn disabled">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                <% } %>
+            </div>
+            
+        </main>
+    </div>
+</body>
+</html>

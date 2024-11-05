@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit OrerManagement</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    
+    <style>
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        #order{
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            color: white;
+        }
+
+        .status-dropdown {
+            font-size: 16px;
+        }
+
+        .status-select {
+            width: 130px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            appearance: none;
+            cursor: pointer;
+            outline: none;
+            background-color: #f1f1f1;
+            background: #f1f1f1 url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0ibm9uZSIgdmlld0JveD0iMCAwIDE2IDE2Ij4KPHBhdGggZD0iTTIgNi41TDEuMjU3IDcgOCAxMy41IDE0Ljc0MyA3TDE0IDYuNUw4IDEyLjUgMiw2LjVaIiBmaWxsPSIjNjY2IiBzdHJva2U9IiNjY2MiLz48L3N2Zz4=') no-repeat right 10px center;
+            background-size: 12px;
+        }
+
+        .status-select option {
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+            height: 200px; 
+        }
+
+        #returnReasonText{
+          margin-left: 20px;
+          font-weight: 700;
+          margin-top: 50px;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #acceptReturn{
+          background-color: #4CAF50;
+          color: white;
+          height: 35px;
+          width: 70px;
+          border: 1px solid;
+          border-radius: 5px;
+          margin-top: 30px;
+        }
+
+        #rejectReturn{
+          background-color: #f44336;
+          color: white;
+          height: 35px;
+          width: 70px;
+          border: 1px solid;
+          border-radius: 5px;
+          margin-top: 30px;
+          margin-left: 10px;
+        }
+
+
+    </style>
+    
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span>Orbit</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
+                    <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
+                    <li><a id="order" class="active" href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
+                    <li><a href="/admin/getoffer"><i class="fa-solid fa-tag"></i> Offer Module</a></li>
+                    <li><a href="/admin/getcoupon"><i class="fa-solid fa-ticket"></i> Coupon Management</a></li>
+                    <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
+                </ul>
+            </nav>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+        </aside>
+        <main class="main-content">
+                <header class="header">
+                    <h1>Order Management</h1>
+                </header>
+                <br><br><br>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                              <!-- <th>NO.</th> -->
+                              <th>Order ID</th>
+                              <th>Username</th>
+                              <th>Product Name</th>
+                              <th>Price</th>
+                              <th>Qty</th>
+                              <th>Delivery Address</th>
+                              <th>Payment Method</th>
+                              <th>Status</th>
+                              <% if (order.some(o => o.items.some(item => item.status === "Processing"))) { %>
+                                <th>Return Request</th>
+                              <% } %>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% order.forEach((order, index) => { %>
+                              <% order.items.forEach(item => { %>
+                                <tr>
+                                  <!-- <td><%= (currentPage - 1) * itemsPerPage + index + 1 %></td> -->
+                                  <td><%= order._id %></td>
+                                  <td><%= order.deliveryAddress.name %></td>
+                                  <td><%= item.productName %></td>
+                                  <td>₹<%= item.price.toFixed(2) %></td>
+                                  <td><%= item.quantity %></td>
+                                  <td>
+                                    <div>
+                                      <%= order.deliveryAddress.address %>, 
+                                      <%= order.deliveryAddress.locality %>, 
+                                      <%= order.deliveryAddress.district %>, 
+                                      <%= order.deliveryAddress.state %>
+                                    </div>
+                                    <div>Pincode: <%= order.deliveryAddress.pincode %></div>
+                                  </td>
+                                  <td><%= order.paymentMethod %></td>
+                                  <td>
+                                    <% if (item.status === "Cancelled" || item.status === "Returned") { %>
+                                      <div class="status-message" style="font-weight: 800; font-size: 18px; color: red;">
+                                        Order <%= item.status === "Cancelled" ? "Cancelled" : "Returned" %>
+                                      </div>
+                                    <% } else { %>
+                                      <div class="status-dropdown">
+                                        <select name="status" class="status-select" order_id="<%= order._id %>" product_id="<%= item.productId._id %>">
+                                          <option value="Delivered" <%= item.status === "Delivered" ? "selected" : "" %>>Delivered</option>
+                                          <option value="Shipped" <%= item.status === "Shipped" ? "selected" : "" %>>Shipped</option>
+                                          <option value="Processing" <%= item.status === "Processing" ? "selected" : "" %>>Processing</option>
+                                          <option value="Pending" <%= item.status === "Pending" ? "selected" : "" %>>Pending</option>
+                                          <option value="Returned" <%= item.status === "Returned" ? "selected" : "" %>>Returned</option>
+                                          <option value="Cancelled" <%= item.status === "Cancelled" ? "selected" : "" %>>Cancelled</option>
+                                        </select>
+                                      </div>
+                                    <% } %>
+                                  </td>
+                                  <% if (item.status === "Processing" && item.returnReason) { %>
+                                  <td>
+                                      <button class="return-request-btn" data-return-reason="<%= item.returnReason %>">View Return Request</button>
+                                  </td>
+                                  <% } %>
+                                </tr>
+                              <% }) %>
+                            <% }) %>
+                          </tbody>
+                    </table>
+
+                    <div id="returnRequestModal" class="modal">
+                        <div class="modal-content">
+                          <span class="close-button">&times;</span>
+                          <h2>Reason for return:</h2>
+                          <i><p id="returnReasonText"></p></i>
+                          <button id="acceptReturn">Accept</button>
+                          <button id="rejectReturn">Reject</button>
+                        </div>
+                      </div>
+                </div>                
+                <div class="pagination">
+                    <!-- Previous Arrow -->
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>" class="arrow-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                    <% } else { %>
+                        <span class="arrow-btn disabled">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </span>
+                    <% } %>
+                
+                    <!-- Next Arrow -->
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>" class="arrow-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    <% } else { %>
+                        <span class="arrow-btn disabled">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    <% } %>
+                </div>
+                
+        </main>
+    </div>
+
+    <script>
+
+        // update order status
+        document.querySelectorAll('.status-select').forEach(select => {
+          select.addEventListener('change', async function() {
+            const orderId = this.getAttribute('order_id');
+            const productId = this.getAttribute('product_id');
+            const status = this.value;
+
+            try {
+              const response = await fetch(`/admin/updateOrderStatus/${orderId}/${productId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status })
+              });
+
+              const result = await response.json();
+              if (result.success) {
+                window.location.reload();
+              } else {
+                console.error(result.message);
+              }
+            } catch (error) {
+              console.error('Error:', error);
+            }
+          });
+        });
+
+        // Modal Logic
+        const modal = document.getElementById("returnRequestModal");
+        const returnReasonText = document.getElementById("returnReasonText");
+
+        document.querySelectorAll('.return-request-btn').forEach(button => {
+          button.addEventListener('click', function() {
+            const returnReason = this.getAttribute('data-return-reason');
+            returnReasonText.textContent = returnReason;
+            modal.style.display = "block";
+
+            const orderId = this.closest('tr').querySelector('.status-select').getAttribute('order_id');
+            const productId = this.closest('tr').querySelector('.status-select').getAttribute('product_id');
+
+            document.getElementById('acceptReturn').onclick = async function() {
+              await updateOrderStatus(orderId, productId, 'Returned');
+            };
+
+            document.getElementById('rejectReturn').onclick = async function() {
+              await updateOrderStatus(orderId, productId, 'Delivered');
+            };
+          });
+        });
+
+        // Close modal
+        document.querySelector(".close-button").onclick = function() {
+          modal.style.display = "none";
+        };
+
+        async function updateOrderStatus(orderId, productId, status) {
+          try {
+            const response = await fetch(`/admin/updateOrderStatus/${orderId}/${productId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ status })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+              window.location.reload();
+            } else {
+              console.error(result.message);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+    </script>
+
+</body>
+</html>

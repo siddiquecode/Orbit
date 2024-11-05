@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Orbit CouponManagement</title>
+    <link rel="stylesheet" href="/css/admin.css">
+
+    <style>
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        #coupon{
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            color: white;
+        }
+
+        .add-coupon_container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            border-right: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 5px;
+        }
+
+        .add-coupon {
+            padding: 10px 20px;
+            background-color: #15605bd5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-coupon:hover{
+            background-color: #15605B;
+        }
+
+        .edit-coupon {
+            width: 50%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+            color: #ffffff;
+            background-color: #007BFF;
+        }
+
+        .delete-coupon {
+            width: 50%;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+            color: #ffffff;
+            background-color: red;
+        }
+
+        .edit-coupon:hover,
+        .delete-coupon:hover{
+            background-color: #ffffff41;
+            color: #000000;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span>Orbit</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
+                    <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
+                    <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
+                    <li><a href="/admin/getoffer"><i class="fa-solid fa-tag"></i> Offer Module</a></li>
+                    <li><a id="coupon" class="active" href="/admin/getcoupon"><i class="fa-solid fa-ticket"></i> Coupon Management</a></li>
+                    <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
+                </ul>
+            </nav>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h1>Coupon Management</h1>
+            </header>
+            <div class="add-coupon_container">
+                <a href="/admin/addcoupon"><button class="add-coupon" id="addCouponBtn">+ Add coupon</button></a>
+            </div><br><br><br>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NO.</th>
+                            <th>Coupon Code</th>
+                            <th>Discount</th>
+                            <th>Minimun Amount</th>
+                            <th>Maximum Amount</th>
+                            <th>Expiration Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (coupons.length > 0) { %>
+                            <% coupons.forEach((coupon, index) => { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td><%= coupon.couponCode %></td>
+                                    <td><%= coupon.discount %> %</td>
+                                    <td><%= coupon.minimumAmount %></td>
+                                    <td><%= coupon.maximumAmount %></td>
+                                    <td><%= new Date(coupon.expireDate).toLocaleDateString() %></td>
+                                    <td>
+                                        <a href="/admin/editcoupon/<%= coupon._id %>">
+                                            <button class="edit-coupon" id="editCouponBtn" style="margin-bottom: 5px;">Edit</button>
+                                        </a>
+                                        <a href="#">
+                                            <button class="delete-coupon" data-url="/admin/deletecoupon/<%= coupon._id %>" id="deleteBtn" style="margin-bottom: 5px;">Delete</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7">No coupons available</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            
+        </main>
+    </div>
+
+    <script>
+
+        // sweet alert for delete coupon
+        document.querySelectorAll('.delete-coupon').forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const deleteUrl = this.getAttribute('data-url');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Coupon has been deleted.',
+                            icon: 'success',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+
+                        setTimeout(() => {
+                            window.location.href = deleteUrl;
+                        }, 3000);
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>

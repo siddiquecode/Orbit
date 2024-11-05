@@ -1,0 +1,241 @@
+    
+    <%- include('../partials/header') %>
+
+    <style>
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .w_sidebar {
+            margin-left: -80px;
+            width: 280px;
+            padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            background-color: #e2e2e2;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.075);
+        }
+
+        .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: #db710e;
+        }
+
+        .nav-links {
+            padding-top: 0.625rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
+            padding: 0.625rem;
+            width: 200px;
+        }
+
+        .nav-link i{
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            color: blue;
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: #000000;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-left: 1rem;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .coupon-banner {
+            background-color: #085e58;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            }
+
+        .coupon-banner h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            line-height: 34px;
+            color: #fff;
+        }
+
+        .coupon-banner p {
+            font-size: 16px;
+            color: #fff;
+            margin: 13px;
+        }
+
+        .my-coupons {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .coupon-card {
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            padding: 15px;
+            position: relative;
+            border: 1px solid #085e58;
+            background-color: #085e582d;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 1.2);
+        }
+
+        .coupon-card:hover{
+            transform: scale(1.01);
+        }
+
+        .coupon-content {
+            flex: 1;
+        }
+
+        .coupon-content h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .coupon-content p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .empty_coupon{
+            /* width: 500px; */
+            /* height: 400px; */
+            /* margin-top: 20px; */
+            /* margin-left: 500px; */
+        }
+        .empty_coupon img{
+            width: 80%;
+            /* margin-bottom: 10px; */
+        }
+        .empty_coupon p{
+            font-size: 20px;
+            color: #f00;
+        }
+
+    </style>
+    
+    <div class="profile-container">
+        <div class="wrapper">
+
+            <div class="w_sidebar">
+                <div class="profile">
+                    <div class="profile-img"> <img src="/images/dp.jpg" alt=""></div>
+                    
+                    <p class="profile-name">Hello, <span class="highlight"><%= user.firstname %></span></p>
+                </div>
+                <div class="nav-links">
+                    <a href="/userprofile" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/userorders" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="/useraddress" class="nav-link">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>My Address</span>
+                    </a>
+                    <a href="/userwishlist" class="nav-link">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Wish List</span>
+                    </a>
+                    <a href="/userwallet" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                    <a href="/usercoupon" class="nav-link active">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Coupon</span>
+                    </a>
+                    <a href="/userlogout" class="nav-link">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="main-content">
+
+                <div class="coupon-banner">
+                    <h2>Coupon Carnival</h2>
+                    <p>Exclusive coupons just for you!</p>
+                </div>
+                <h1 class="page-title">My Coupons</h1>
+                    
+                <section class="my-coupons">
+                    <% if (coupons && coupons.length > 0) { %>
+                      <% coupons.forEach(coupon => { %>
+                        <div class="coupon-card">
+                          <div class="coupon-content">
+                            <h4>Coupon code: <%= coupon.couponCode %></h4>
+                            <p><strong>Extra <%= coupon.discount %>% Off</strong></p>
+                            <h4>Expiry Date: <%= new Date(coupon.expireDate).toISOString().split('T')[0] %></h4>
+                          </div>
+                        </div>
+                      <% }) %>
+                    <% } else { %>
+                      <div class="empty_coupon">
+                        <img src="/images/emptyCoupon.png" alt="">
+                        <p>No coupons available.</p>
+                    </div>
+                    <% } %>
+                  </section>
+            </div>
+
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>

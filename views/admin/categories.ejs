@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit CategoryManagement</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    
+    <style>
+
+        #category{
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            color: white;
+        }
+
+        .add-category-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            border-right: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 5px;
+        }
+
+        .add-category {
+            padding: 10px 20px;
+            background-color: #15605bd5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-category:hover{
+            background-color: #15605B;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        .edit-category {
+            width: 70%;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+            color: #ffffff;
+            background-color: #007BFF;
+        }
+
+        #delete {
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+            color: #ffffff;
+            background-color: red;
+        }
+        #delete:hover,
+        .edit-category:hover{
+            background-color: #ffffff41;
+            color: #000000;
+        }
+        
+        #unblock {
+            width: 70%;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            background-color:  #00ff00;
+        }
+
+        #block {
+            width: 70%;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+            color: #ffffff;
+            background-color:  red;
+        }
+
+        #block:hover,#unblock:hover{
+            background-color: #ffffff41;
+            color: #000000;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+        
+        #imageCropModal{
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            margin: 100px auto;
+        }
+
+        .close, .close-crop {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus,
+        .close-crop:hover,
+        .close-crop:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content form label {
+            margin: 10px 0 5px;
+        }
+
+        .modal-content form input,
+        .modal-content form select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content form button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .image-preview .close-preview {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .crp-btn{
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: end;
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span>Orbit</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
+                    <li><a id="category" class="active" href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
+                    <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
+                    <li><a href="/admin/getoffer"><i class="fa-solid fa-tag"></i> Offer Module</a></li>
+                    <li><a href="/admin/getcoupon"><i class="fa-solid fa-ticket"></i> Coupon Management</a></li>
+                    <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
+                </ul>
+            </nav>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h1>Category Management</h1>
+            </header>
+            <div class="add-category-container">
+                <button class="add-category" id="addCategoryBtn">+ Add category</button>
+            </div><br><br><br>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category No.</th>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Discount</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% category.forEach((category, index) => { %>
+                        <tr>
+                          <td><%= (currentPage - 1) * itemsPerPage + index + 1 %></td>
+                          <td><%= category.categoryName %></td>
+                          <td><%= category.description %></td>
+                          <td><%= category.discount %></td>
+                          <td>
+                            <img src="<%= category.categoryImage[0] %>" alt="image" style="width: 100px; height: 100px;">
+                          </td>
+                          <td>
+                            <button class="edit-category" id="editCategoryBtn" style="margin-bottom: 5px;">Edit</button>
+                            <!-- <form action="/admin/deletecategory/<%= category._id %>" method="post">
+                              <button type="submit" id="delete" class="action-btn delete">Delete</button>
+                            </form> -->
+                            <% if (category.isBlocked) { %>
+                                <form action="/admin/unblockcategory/<%= category._id %>" method="POST">
+                                    <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
+                                </form>
+                            <% } else { %>
+                                <form action="/admin/blockcategory/<%= category._id %>" method="POST">
+                                    <button type="submit" id="block" class="action-btn block">Soft delete</button>
+                                </form>
+                            <% } %>
+                          </td>
+                        </tr>
+                        <% }) %>
+                      </tbody>                      
+                </table>
+            </div>
+            <div class="pagination">
+                <!-- Previous Arrow -->
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>" class="arrow-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                <% } else { %>
+                    <span class="arrow-btn disabled">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                <% } %>
+            
+                <!-- Next Arrow -->
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>" class="arrow-btn">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                <% } else { %>
+                    <span class="arrow-btn disabled">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                <% } %>
+            </div>
+            
+        </main>
+    </div>
+
+    <!--Add category Modal -->
+    <div id="addCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Category</h2>
+            <form id="addCategoryForm" enctype="multipart/form-data">
+                
+                <div id="categoryNameError" style="color: red;"></div>
+                <label for="categoryName">Category Name:</label>
+                <input type="text" id="categoryName" name="categoryName">
+                
+                <div id="descriptionError" style="color: red;"></div>
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description">
+
+                <div id="discountError" style="color: red;"></div>
+                <label for="discount">Discount (%):</label>
+                <input type="number" id="discount" name="discount" min="0" max="100">
+                
+                <div id="imageError" style="color: red;"></div>
+                <label for="categoryImage">Image</label>
+                <input type="file" id="image" name="image" multiple>
+                
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
+                <button type="submit">Add Category</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Image Crop Modal -->
+    <div id="imageCropModal" class="modal">
+        <div class="modal-content">
+            <span class="close-crop">&times;</span>
+            <h2>Crop Image</h2>
+            <div id="cropContainer">
+                <img id="imageToCrop" style="max-width: 100%;" />
+            </div>
+            <button type="button" id="cancelCropBtn" class="crp-btn">Cancel</button>
+            <button type="button" id="saveCroppedImageBtn" class="crp-btn">Save</button>
+        </div>
+    </div>
+
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Category</h2>
+            <form id="editCategoryForm" enctype="multipart/form-data">
+                <input type="hidden" id="editCategoryId" name="editCategoryId">
+    
+                <div id="editcategoryNameError" style="color: red;"></div>
+                <label for="editCategoryName">Category Name:</label>
+                <input type="text" id="editCategoryName" name="categoryName">
+    
+                <div id="editdescriptionError" style="color: red;"></div>
+                <label for="editDescription">Description:</label>
+                <input type="text" id="editDescription" name="description">
+
+                <div id="editDiscountError" style="color: red;"></div>
+                <label for="editDiscount">Discount (%):</label>
+                <input type="number" id="editDiscount" name="discount" min="0" max="100">
+    
+                <div id="editimageError" style="color: red;"></div>
+                <label for="categoryImage">Image</label>
+                <input type="file" id="categoryImage" name="categoryImage" multiple>
+    
+                <div id="editImagePreviewContainer" class="image-preview-container"></div>
+                <button type="submit">Update Category</button>
+            </form>
+        </div>
+    </div>
+    
+    
+
+    <script>
+
+        /*-------------------------------- Add category-------------------------------- */
+
+        // Add category modal logic
+        const modal = document.getElementById("addCategoryModal");
+        const btn = document.getElementById("addCategoryBtn");
+        const span = document.getElementsByClassName("close")[0];
+        const addCategoryForm = document.getElementById('addCategoryForm');
+        const imageInput = document.getElementById('image');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+            addCategoryForm.reset();
+            clearImagePreviews();
+        }
+
+        // Image preview
+        imageInput.addEventListener('change', function() {
+            clearImagePreviews();
+            Array.from(this.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.classList.add('image-preview');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const closeButton = document.createElement('button');
+                    closeButton.classList.add('close-preview');
+                    closeButton.innerHTML = '&times;';
+                    closeButton.onclick = function() {
+                        previewDiv.remove();
+                        removeFile(file);
+                    };
+
+                    previewDiv.appendChild(img);
+                    previewDiv.appendChild(closeButton);
+                    imagePreviewContainer.appendChild(previewDiv);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function clearImagePreviews() {
+            imagePreviewContainer.innerHTML = '';
+        }
+
+        // Remove file from file input
+        function removeFile(fileToRemove) {
+            const dt = new DataTransfer();
+            Array.from(imageInput.files).forEach(file => {
+                if (file !== fileToRemove) {
+                    dt.items.add(file);
+                }
+            });
+            imageInput.files = dt.files;
+        }
+
+        // Handle add category form submission
+        addCategoryForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        let form = event.target;
+        let formData = new FormData(form);
+
+        const categoryName = formData.get('categoryName');
+        const description = formData.get('description');
+        const discount = formData.get('discount');
+        const imageFiles = formData.getAll('image');
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jfif'];
+
+        let error = false;
+
+        function setError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerText = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 4500);
+        }
+
+        document.getElementById('categoryNameError').innerText = '';
+        document.getElementById('descriptionError').innerText = '';
+        document.getElementById('discountError').innerText = '';
+        document.getElementById('imageError').innerText = '';
+
+        if (!categoryName || !categoryName.trim()) {
+            error = true;
+            setError('categoryNameError', 'Please enter a valid category name without spaces before and after');
+        } else if (!description || !description.trim()) {
+            error = true;
+            setError('descriptionError', 'Description cannot be empty or contain only spaces');
+        } else if (discount === null || discount < 0 || discount > 100) {
+            error = true;
+            setError('discountError', 'Please enter a valid discount between 0 and 100');
+        } else if (!imageFiles || imageFiles.length === 0) {
+            error = true;
+            setError('imageError', 'Please select an image');
+        } else {
+            const invalidImage= Array.from(imageFiles).find(file=> !validImageTypes.includes(file.type));
+            if(invalidImage){
+                error = true;
+                setError('imageError', 'Please upload a valid image (JPEG, PNG, JPG, JFIF)');
+            }
+        }
+
+        if (!error) {
+            try {
+                const response = await fetch('/admin/addcategory', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.error) {
+                    displayError(result.error);
+                } else if (result.success) {
+                    modal.style.display = 'none';
+                    location.reload();
+                }
+            } catch (error) {
+                console.log("Error:", error);
+            }
+        }
+    });
+
+    function displayError(errorMessage){
+        const errorElements = {
+            categoryName: document.getElementById('categoryNameError'),
+            description: document.getElementById('descriptionError'),
+            discount: document.getElementById('discountError'),
+            image: document.getElementById('imageError')
+        };
+
+        // Clear previous errors
+        Object.values(errorElements).forEach(el => el.textContent = "");
+
+        if (errorMessage.includes('category name') || errorMessage.includes('already added')) {
+            errorElements.categoryName.textContent = errorMessage;
+        } else if (errorMessage.includes('description')) {
+            errorElements.description.textContent = errorMessage;
+        }else if(errorMessage.includes('discount')){
+            errorElements.discount.textContent = errorMessage;
+        } else if (errorMessage.includes('image')) {
+            errorElements.image.textContent = errorMessage;
+        }
+    }
+
+
+
+        /* ------------------------Image crop--------------------------- */
+
+        const imageCropModal = document.getElementById('imageCropModal');
+        const closeCrop = document.getElementsByClassName('close-crop')[0];
+        const saveCroppedImageBtn = document.getElementById('saveCroppedImageBtn');
+        const cancelCropBtn = document.getElementById('cancelCropBtn');
+        const imageToCrop = document.getElementById('imageToCrop');
+        let cropper;
+        let currentImagePreview;
+        let currentFileInput;
+
+        // Function to open the crop modal with the selected image
+        function openCropModal(imagePreview, fileInput) {
+            imageCropModal.style.display = "block";
+            imageToCrop.src = imagePreview.src;
+
+            cropper = new Cropper(imageToCrop, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+            });
+
+            currentImagePreview = imagePreview;
+            currentFileInput = fileInput;
+        }
+
+        document.getElementById('imagePreviewContainer').addEventListener('click', function (event) {
+            if (event.target.tagName === 'IMG') {
+                openCropModal(event.target, document.getElementById('image'));
+            }
+        });
+
+        document.getElementById('editImagePreviewContainer').addEventListener('click', function (event) {
+            if (event.target.tagName === 'IMG') {
+                openCropModal(event.target, document.getElementById('categoryImage'));
+            }
+        });
+
+        closeCrop.onclick = function () {
+            imageCropModal.style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        };
+
+        cancelCropBtn.onclick = function () {
+            imageCropModal.style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        };
+
+        // Save the cropped image
+        saveCroppedImageBtn.onclick = function () {
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+            const url = URL.createObjectURL(blob);
+            currentImagePreview.src = url;
+            const croppedFile = new File([blob], 'cropped-image.png', { type: 'image/png' });
+            const dt = new DataTransfer();
+            dt.items.add(croppedFile);
+            currentFileInput.files = dt.files;
+            imageCropModal.style.display = 'none';
+            cropper.destroy();
+            cropper = null;
+        });
+    };
+
+
+        /* --------------------------Edit category-------------------------- */
+        
+        // Edit category modal logic
+        const editCategoryModal = document.getElementById('editCategoryModal');
+        const editCategoryBtns = document.querySelectorAll('.edit-category');
+        const closeEditCategoryBtn = document.getElementsByClassName('close')[1];
+        const editCategoryForm = document.getElementById('editCategoryForm');
+        const categoryImage = document.getElementById('categoryImage');
+        const editCategoryImagePreviewContainer = document.getElementById('editImagePreviewContainer');
+
+        // Open the modal and populate fields
+        editCategoryBtns.forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const categoryId = row.querySelector('form').action.split('/').pop();
+                const categoryName = row.querySelector('td:nth-child(2)').textContent.trim();
+                const description = row.querySelector('td:nth-child(3)').textContent.trim();
+                const discount = row.querySelector('td:nth-child(4)').textContent.trim();
+                const image = row.querySelector('td:nth-child(5) img').src;
+                
+
+                document.getElementById('editCategoryId').value = categoryId;
+                document.getElementById('editCategoryName').value = categoryName;
+                document.getElementById('editDescription').value = description;
+                document.getElementById('editDiscount').value = discount;
+                
+                clearEditImagePreviews();
+                const imagePreview = document.createElement('div');
+                imagePreview.classList.add('image-preview');
+                const img=document.createElement('img');
+                img.src = image;
+                img.alt = 'Category Image';
+
+                const closeButton=document.createElement('button')
+                closeButton.classList.add('close-preview');
+                closeButton.innerHTML='&times;';
+                closeButton.onclick=function(){
+                    imagePreview.remove();
+                }
+                imagePreview.appendChild(img);
+                imagePreview.appendChild(closeButton);
+                editCategoryImagePreviewContainer.appendChild(imagePreview);
+                editCategoryModal.style.display = 'block';
+            });
+        });
+
+        closeEditCategoryBtn.onclick = function() {
+            editCategoryModal.style.display = "none";
+            editCategoryForm.reset();
+            clearEditImagePreviews();
+        };
+
+        // Image preview and cropping functionality
+        categoryImage.addEventListener('change', function() {
+            clearEditImagePreviews();
+
+            Array.from(this.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.classList.add('image-preview');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const closeButton = document.createElement('button');
+                    closeButton.classList.add('close-preview');
+                    closeButton.innerHTML = '&times;';
+                    closeButton.onclick = function() {
+                        previewDiv.remove();
+                        removeEditFile(file);
+                    };
+
+                    previewDiv.appendChild(img);
+                    previewDiv.appendChild(closeButton);
+                    editCategoryImagePreviewContainer.appendChild(previewDiv);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function clearEditImagePreviews() {
+            editCategoryImagePreviewContainer.innerHTML = '';
+        }
+
+        // Remove file input file
+        function removeEditFile(fileToRemove) {
+            const dt = new DataTransfer();
+            Array.from(categoryImage.files).forEach(file => {
+                if (file !== fileToRemove) {
+                    dt.items.add(file);
+                }
+            });
+            categoryImage.files = dt.files;
+        }
+
+        // Handle edit category form submission
+        editCategoryForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        let form = event.target;
+        const formData = new FormData(form);
+        const categoryId = document.getElementById('editCategoryId').value;
+
+        const editCategoryName = formData.get('categoryName');
+        const editDescription = formData.get('description');
+        const editDiscount = formData.get('discount');
+        const imageFiles = formData.getAll('categoryImage');
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jfif'];
+
+        let error = false;
+
+        function setError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerText = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 4500);
+        }
+
+        document.getElementById('editcategoryNameError').innerText = '';
+        document.getElementById('editdescriptionError').innerText = '';
+        document.getElementById('editDiscountError').innerText = '';
+        document.getElementById('editimageError').innerText = '';
+
+        if (!editCategoryName || !editCategoryName.trim()) {
+            error = true;
+            setError('editcategoryNameError', 'Please enter a valid category name without spaces before and after');
+        } else if (!editDescription || !editDescription.trim()) {
+            error = true;
+            setError('editdescriptionError', 'Description cannot be empty or contain only spaces');
+        } else if (!editDiscount || editDiscount < 0 || editDiscount > 100) {
+            error = true;
+            setError('editDiscountError', 'Please enter a valid discount between 0 and 100');
+        } else if (imageFiles.length === 0) {
+            error = true;
+            setError('editimageError', 'Please select an image');
+        } else {
+            const invalidImage = Array.from(imageFiles).find(file => !validImageTypes.includes(file.type));
+            if (invalidImage) {
+                error = true;
+                setError('editimageError', 'Please upload a valid image (JPEG, PNG, JPG, JFIF)');
+            }
+        }
+
+        if (!error) {
+            try {
+                const response = await fetch(`/admin/editcategory/${categoryId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    editCategoryModal.style.display = 'none';
+                    location.reload();
+                } else {
+                    console.error('Error updating category');
+                    const result = await response.json();
+                    console.error(result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    });
+
+
+
+    </script>
+
+</body>
+</html>

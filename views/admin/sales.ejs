@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Orbit SalesReport</title>
+    <link rel="stylesheet" href="/css/admin.css">
+
+    <style>
+
+        #sales{
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            border: 3px solid black;
+            border-radius: 10px;
+            color: #065853;
+            text-align: center;
+            width: 30%;
+        }
+
+        .stat-box h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .stat-box p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .sales-report {
+            border-top: 1px solid black;
+            padding: 20px 20px 0 20px;
+        }
+
+        .sales-report h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            transform: translateY(-60px);
+        }
+
+        .download-btn {
+            background-color: #15605b;
+            color: #fff;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background-color: #15605bd5;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-form label {
+            margin-right: 5px;
+        }
+
+        .filter-form input,
+        .filter-form select {
+            padding: 5px;
+            margin-right: 25px;
+        }
+
+        .filter-btn {
+            background-color: #15605b;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover{
+          background-color: #15605bd5;
+        }
+
+        .clear-btn {
+            background-color: #ff2727;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .clear-btn:hover{
+          color: black;
+          background-color:#584b4b81;
+        }
+
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .sales-table thead {
+            background-color: #58525225;
+            border: 1px solid #ccc;
+        }
+
+        .sales-table thead th {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .sales-table tbody tr {
+            border-bottom: 1px solid #444444a6;
+        }
+
+        .sales-table tbody td {
+            padding: 10px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <span>Orbit</span>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
+                    <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
+                    <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
+                    <li><a href="/admin/getoffer"><i class="fa-solid fa-tag"></i> Offer Module</a></li>
+                    <li><a href="/admin/getcoupon"><i class="fa-solid fa-ticket"></i> Coupon Management</a></li>
+                    <li><a id="sales" class="active" href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
+                </ul>
+            </nav>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+        </aside>
+        <main class="main-content">
+
+            <div class="stats">
+              <div class="stat-box">
+                <h3>Total Sales Count:</h3>
+                <p><%= totalSalesCount %></p>
+              </div>
+              <div class="stat-box">
+                <h3>Total Order Amount:</h3>
+                <p>₹<%= totalOrderAmount %></p>
+              </div>
+              <div class="stat-box">
+                <h3>User Count:</h3>
+                <p><%= userCount %></p>
+              </div>
+            </div>
+          
+            <div class="sales-report">
+              <h2>SALES REPORT</h2>
+              <div class="download-buttons">
+                <a href="/admin/downloadPDF?startDate=<%= startDate %>&endDate=<%= endDate %>&filter=<%= filter %>" class="download-btn">Download PDF</a>
+                <a href="/admin/downloadEXCEL?startDate=<%= startDate %>&endDate=<%= endDate %>&filter=<%= filter %>" class="download-btn">Download Excel</a>
+              </div>
+          
+              <div class="filter-section">
+                <form class="filter-form" action="/admin/getreport" method="GET">
+                  <label for="start-date">Start Date:</label>
+                  <input type="date" id="start-date" name="startDate" value="<%= startDate %>">
+                  
+                  <label for="end-date">End Date:</label>
+                  <input type="date" id="end-date" name="endDate" value="<%= endDate %>">
+                  
+                  <label for="filter">Select Filter:</label>
+                  <select id="filter" name="filter">
+                    <option value="all" <%= filter === 'all' ? 'selected' : '' %>>All</option>
+                    <option value="daily" <%= filter === 'daily' ? 'selected' : '' %>>Daily</option>
+                    <option value="weekly" <%= filter === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                    <option value="monthly" <%= filter === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                  </select>
+          
+                  <button type="submit" class="filter-btn">Filter</button>
+                  <button type="button" class="clear-btn" onclick="clearFilters()">Clear</button>
+                </form>
+              </div>
+          
+              <table class="sales-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Order ID</th>
+                    <th>Username</th>
+                    <th>Product Name</th>
+                    <th>Discount</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Payment Method</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                      <% order.items.forEach(item => { %>
+                        <tr>
+                          <td><%= order.orderedDate.toDateString() %></td>
+                          <td><%= order._id %></td>
+                          <td><%= order.deliveryAddress.name %></td>
+                          <td><%= item.productName %></td>
+                          <td>
+                            <% let highestDiscount = Math.max(item.productDiscount || 0, item.categoryDiscount || 0); %>
+                            <%= highestDiscount %>%
+                          </td>
+                          <td>₹<%= item.price.toFixed(2) %></td>
+                          <td><%= item.quantity %></td>
+                          <td><%= order.paymentMethod %></td>
+                        </tr>
+                      <% }) %>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="9">No orders found for the selected filters.</td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination">
+              <!-- Previous Arrow -->
+              <% if (currentPage > 1) { %>
+                  <a href="?page=<%= currentPage - 1 %>&startDate=<%= startDate %>&endDate=<%= endDate %>&filter=<%= filter %>" class="arrow-btn">
+                      <i class="fa-solid fa-arrow-left"></i>
+                  </a>
+              <% } else { %>
+                  <span class="arrow-btn disabled">
+                      <i class="fa-solid fa-arrow-left"></i>
+                  </span>
+              <% } %>
+          
+              <!-- Next Arrow -->
+              <% if (currentPage < totalPages) { %>
+                  <a href="?page=<%= currentPage + 1 %>&startDate=<%= startDate %>&endDate=<%= endDate %>&filter=<%= filter %>" class="arrow-btn">
+                      <i class="fa-solid fa-arrow-right"></i>
+                  </a>
+              <% } else { %>
+                  <span class="arrow-btn disabled">
+                      <i class="fa-solid fa-arrow-right"></i>
+                  </span>
+              <% } %>
+            </div>
+              
+        </main>
+    </div>
+    <script>
+
+      // clear filter
+      function clearFilters() {
+        window.location.href = '/admin/getreport';
+      }
+      
+    </script>
+</body>
+</html>

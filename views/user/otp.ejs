@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+</head>
+<body>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .otp-inputs input {
+            width: 20%; 
+            height: 40px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 50%;
+            padding: 10px;
+            background-color: #9D51FF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #timer {
+            margin-top: 10px;
+        }
+
+        #resendBtn {
+            margin-top: 10px;
+            background-color: #9D51FF;
+            width: 130px;
+        }
+
+        #resendBtn:disabled {
+            background-color: #ccc;
+        }
+    </style>
+
+    <div class="container">
+        <h2>OTP Verification</h2>
+        <% if(errorMessage){ %>
+            <p style="color: red;"><%= errorMessage %></p>
+        <% } %>
+        <form action="/postotp" method="POST" id="otpForm">
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" class="otp" name="otp1" required>
+                <input type="text" maxlength="1" class="otp" name="otp2" required>
+                <input type="text" maxlength="1" class="otp" name="otp3" required>
+                <input type="text" maxlength="1" class="otp" name="otp4" required>
+                <input type="text" maxlength="1" class="otp" name="otp5" required>
+                <input type="text" maxlength="1" class="otp" name="otp6" required>
+            </div>
+           
+            <button type="submit">Verify OTP</button>
+        </form>
+        <p id="timer">Resend OTP in <span id="time">60</span> seconds</p>
+        <form action="/resentOtp" method="post">
+        <button id="resendBtn" type="submit" disabled>Resend OTP</button>
+        </form>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            let timer = 60;
+            const timerSpan = document.getElementById('time');
+            const resendBtn = document.getElementById('resendBtn');
+            const interval = setInterval(() => {
+                timer--;
+                timerSpan.textContent = timer;
+                if (timer === 0) {
+                    clearInterval(interval);
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+    
+            const otpInputs = document.querySelectorAll('.otp');
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+            });
+    
+            document.getElementById('otpForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+    
+                const otp = Array.from(otpInputs).map(input => input.value).join('');
+                const response = await fetch('/postotp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ otp })
+                });
+    
+                if (response.ok) {
+                    window.location.href = "/Userlogin";
+                } else {
+                    const errorMessage = await response.text();
+                    otpInputs.forEach(input => input.value = '');
+
+                    const errorParagraph = document.createElement('p');
+                    errorParagraph.style.color = 'red';
+                    errorParagraph.textContent = errorMessage;
+                    document.querySelector('.container').prepend(errorParagraph);
+
+                    setTimeout(() => {
+                        errorParagraph.remove();
+                    }, 3000);
+                }
+            });
+        });
+
+    </script>
+    
+
+</body>
+</html>

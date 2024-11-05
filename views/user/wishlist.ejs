@@ -1,0 +1,373 @@
+    
+    <%- include('../partials/header') %>
+
+    <style>
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .w_sidebar {
+            margin-left: -80px;
+            width: 280px;
+            padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100vh;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            background-color: #e2e2e2;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.075);
+        }
+
+        .profile-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .highlight {
+            color: #db710e;
+        }
+
+        .nav-links {
+            padding-top: 0.625rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            color: #000000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.192);
+            padding: 0.625rem;
+            width: 200px;
+        }
+
+        .nav-link i{
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            color: blue;
+        }
+
+        .nav-link.active {
+            color: white;
+            background-color: #000000;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-left: 1rem;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            cursor: pointer;
+            height: 150px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-image img {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .product-details {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .product-details h3 {
+            font-size: 16px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price-section {
+            font-size: 18px;
+        }
+
+        .current-price {
+            color: #333;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #757575;
+            margin-right: 10px;
+        }
+
+        .discount {
+            color: #388e3c;
+        }
+
+        .delete-icon a {
+            display: inline-block;
+            padding: 10px 15px;
+            width: 134px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            color: #000000b7;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 1.2);
+        }
+
+        .delete-icon a:hover {
+            background-color: #8d83832f;
+            transform: scale(1.05);
+        }
+
+        .go-to-cart .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            color: #000000b7;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 1.2);
+            margin-top: 10px;
+        }
+
+        .go-to-cart .btn:hover {
+            background-color: rgba(255, 166, 0, 0.158);
+            transform: scale(1.05);
+        }
+
+        .empty_wishlist{
+            width: 100%;
+            height: auto;
+        }
+
+        .empty_wishlist img{
+            margin-bottom: 40px;
+            margin-left: 110px;
+        }
+
+        .wishlist-pagination{
+            display: flex;
+            height: 50px;
+            align-items: center;
+            gap: 10px;
+        }
+
+    </style>
+    
+    <div class="profile-container">
+        <div class="wrapper">
+
+            <div class="w_sidebar">
+                <div class="profile">
+                    <div class="profile-img"> <img src="/images/dp.jpg" alt=""></div>
+                    
+                    <p class="profile-name">Hello, <span class="highlight"><%= user.firstname %></span></p>
+                </div>
+                <div class="nav-links">
+                    <a href="/userprofile" class="nav-link">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="/userorders" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>My Orders</span>
+                    </a>
+                    <a href="/useraddress" class="nav-link">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>My Address</span>
+                    </a>
+                    <a href="/userwishlist" class="nav-link active">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Wish List</span>
+                    </a>
+                    <a href="/userwallet" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        <span>Wallet</span>
+                    </a>
+                    <a href="/usercoupon" class="nav-link">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Coupon</span>
+                    </a>
+                    <a href="/userlogout" class="nav-link">
+                        <i class="fas fa-power-off"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <h1 class="page-title">My Wishlist (<%= wishlistCount %>)</h1>
+            
+                <% if (wishlist && wishlist.items.length > 0) { %>
+                    <% if (Message) { %>
+                        <p style="color: green; font-weight: 700; font-size: 20px;"><%= Message %></p>
+                    <% } %>
+                    <div class="wishlist-container">
+                        <% wishlist.items.forEach(item => { %>
+                            <div class="wishlist-item">
+                                <div class="product-image" onclick="window.location.href='/productdetails/<%= item.productId._id %>'">
+                                    <img src="<%= item.productId.productImage[0] %>" alt="<%= item.productId.productName %>">
+                                </div>
+                                <div class="product-details">
+                                    <h3><%= item.productId.productName %></h3>
+                                    <div class="stock">
+                                        <span class="stock-count">In stock: <%= item.productId.stock %></span>
+                                        <% if (item.productId.stockWarning) { %>
+                                            <p style="color: red; font-weight: 700;"><%= item.productId.stockWarning %></p>
+                                        <% } %>
+                                    </div>
+                                    <div class="price-section">
+                                        <span class="current-price">₹<%= item.productId.finalDiscountedPrice.toFixed(2) %></span>
+                                        <% if (item.productId.price > item.productId.finalDiscountedPrice) { %>
+                                            <span class="original-price">₹<%= item.productId.price %></span>
+                                        <% } %>
+                                        <span class="discount"><%= item.productId.maxDiscount %>% off</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="delete-icon">
+                                        <a href="#" onclick="confirmRemove('<%= item.productId._id %>')">Remove</a>
+                                    </div>
+                                    <div class="go-to-cart">
+                                        <form action="/WishlistToCart/<%= item.productId._id %>" method="POST">
+                                            <button type="submit" class="btn">Add To Cart</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        <% }) %>
+                    </div>
+
+                    <div class="wishlist-pagination">
+                        <!-- Previous Arrow -->
+                        <% if (currentPage > 1) { %>
+                        <a href="/userwishlist?page=<%= currentPage - 1 %>" class="arrow-btn">
+                          <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                        <% } else { %>
+                        <span class="arrow-btn disabled">
+                          <i class="fa-solid fa-arrow-left"></i>
+                        </span>
+                        <% } %>
+                
+                        <!-- Next Arrow -->
+                        <% if (currentPage < totalPages) { %>
+                        <a href="/userwishlist?page=<%= currentPage + 1 %>" class="arrow-btn">
+                          <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <% } else { %>
+                        <span class="arrow-btn disabled">
+                          <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                        <% } %>
+                    </div>
+
+                <% } else { %>
+                    <div class="empty_wishlist">
+                        <img src="/images/emptyWishlist.png" alt="">
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // remove product
+        function confirmRemove(productId) {
+            Swal.fire({
+                title: 'Are you sure you want to remove this product?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Remove',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/removewishlist/${productId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Removed!',
+                                text: 'The product has been removed.',
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: data.message || 'Failed to remove the product.',
+                                icon: 'error',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong.',
+                            icon: 'error',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    });
+                }
+            });
+        }
+
+    </script>
+
+    <%- include('../partials/footer') %>

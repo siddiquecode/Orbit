@@ -1,0 +1,671 @@
+    
+    <%- include('../partials/header') %>
+
+    <style>
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .wrapper {
+            display: flex;
+        }
+
+        .order-details {
+            width: 100%;
+            padding: 2rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .section {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            background-color: #15605B;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 10px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .section-number {
+            background-color: #19a198;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            font-weight: bold;
+        }
+
+        .section-content {
+            padding: 15px;
+            position: relative;
+        }
+
+        .selected-address p {
+            margin: 5px 0;
+        }
+
+        .change-button {
+            color: #007bff;
+            font-size: 14px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.247);
+            padding: 5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .cchange-button {
+            color: #007bff;
+            font-size: 14px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.247);
+            padding: 5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .address-container {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.18);
+        }
+
+        .add-address {
+            display: flex;
+            align-items: center;
+            color: #3182ce;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .add-address .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.5rem;
+        }
+
+        .dropdown-content {
+            padding: 10px;
+        }
+
+        .address-option {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .address-option:last-child {
+            border-bottom: none;
+        }
+
+        .address-option label{
+            margin-left: 10px;
+        }
+
+        .deliver-here-button {
+            background-color: #6b46c1;
+            color: #fff;
+            width: 140px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 80%;
+        }
+
+        .edit-address {
+            color: #007bff;
+            margin-left: 120px;
+            text-decoration: none;
+            border: 1px solid rgba(0, 0, 0, 0.247);
+            padding: 5px;
+            font-weight: 700;
+        }
+
+        .edit-address:hover {
+            text-decoration: none;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-item-image {
+            width: 200px;
+            height: 200px;
+            margin-right: 25px;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .quantity-btn {
+            background-color: #ddd;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .order-summary-footer {
+            margin-left: 82%;
+        }
+
+        .continue-btn {
+            background-color: #6b46c1;
+            color: white;
+            width: 116px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-option {
+            margin-bottom: 15px;
+        }
+
+        .payment-option label {
+            display: inline;
+            cursor: pointer;
+        }
+
+        .payment-option input {
+            margin-right: 10px;
+        }
+
+        .payment-option span {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .continue-button {
+            width: 30%;
+            margin-left: 70%;
+            padding: 15px;
+            background-color: #6b46c1;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .continue-button:hover {
+            background-color: #804ff1;
+        }
+
+        .price-details {
+            width: 30%;
+            padding: 20px;
+            margin-left: 1rem;
+            width: 400px;
+            height: 350px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .price-details h4 {
+            margin-top: 0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .free-text {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .closs-text{
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
+    
+    <div class="profile-container">
+        <form id="checkoutForm" action="/checkout" method="POST">
+            <div class="wrapper">
+
+                <div class="order-details">
+                    <!-- Delivery Address Section -->
+                    <div class="section">
+                        <div class="section-header">
+                            <span class="section-number">1</span>
+                            <span class="section-title">Delivery Address</span>
+                        </div>
+                        <div class="section-content">
+                            <% if (address && address.length > 0) { %>
+                                <% const selectedAddress = address[0]; %>
+                                <div class="selected-address">
+                                    <p id="displayedAddress"><strong><%= selectedAddress.name %></strong> <%= selectedAddress.address %>, <%= selectedAddress.locality %>, <%= selectedAddress.district %>, <%= selectedAddress.state %> - <%= selectedAddress.pincode %></p>
+                                    <p class="change-button" onclick="toggleAddressDropdown()">Change</p>
+                                </div>
+                            <% } else { %>
+                            <p>No address available. Please add an address.</p>
+                                <div class="address-container">
+                                    <a href="/AddCheckoutAddress" class="add-address">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="icon">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        ADD A NEW ADDRESS
+                                    </a>
+                                </div>
+                            <% } %>
+                        </div>  
+                        <div class="dropdown-content" style="display: none;">
+                            <div class="address-container" style="margin-top: -30px; margin-bottom: 20px;">
+                                <a href="/AddCheckoutAddress" class="add-address">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="icon">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    ADD A NEW ADDRESS
+                                </a>
+                            </div>
+                            <% address.forEach(function(addr, index) { %>
+                                <div class="address-option">
+                                    <input type="radio" id="address-<%= addr._id %>" name="addressId" value="<%= addr._id %>" <%= index === 0 ? 'checked' : '' %> onchange="selectAddress('<%= addr.name %>', '<%= addr.address %>', '<%= addr.locality %>', '<%= addr.district %>', '<%= addr.state %>', '<%= addr.pincode %>')">
+                                    <label for="address-<%= addr._id %>">
+                                        <strong><%= addr.name %></strong> <%= addr.phone %><br>
+                                        <%= addr.address %>, <%= addr.locality %>, <%= addr.district %>, <%= addr.state %> - <%= addr.pincode %>
+                                    </label>
+                                    <a href="/checkoutAddress/<%= addr._id %>" class="edit-address">Edit</a>
+                                </div>
+                            <% }); %>
+                            <p class="deliver-here-button" onclick="saveSelectedAddress()">Deliver Here</p>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary Section -->
+                    <div class="section">
+                        <div class="section-header">
+                        <span class="section-number">2</span>
+                        <span class="section-title">Order Summary</span>
+                        </div>
+                        <div class="section-content">
+                            <% if (product && product.length > 0) { %>
+                                <% product.forEach((item) => { %>
+                                <% if (item && item.productName) { %>
+                                    <p><%= item.productName %></p>
+                                <% } else { %>
+                                    <p>Product name is unavailable.</p>
+                                <% } %>
+                                <% }); %>
+                            <% } else { %>
+                                <p>No items selected.</p>
+                            <% } %>                          
+                        <p class="cchange-button" onclick="toggleOrderSummary()">Details</p>
+                        </div>
+                    
+                        <!-- Order Summary Dropdown -->
+                        <div id="orderSummaryDropdown" class="dropdown-content" style="display: none;">
+                        <% if (product && product.length > 0) { %>
+                            <% product.forEach(function(item) { %>
+                            <div class="order-item">
+                                <img src="<%= item.productImage[0] %>" alt="<%= item.productName %>" class="order-item-image">
+                                <div class="order-item-details">
+                                <p><strong><%= item.productName %></strong></p>
+                                <p>Original Price: ₹<%= item.price %></p>
+                                <p style="font-size: 14px;"><%= item.productDiscount %>% OFF <span>(Category Discount)</span> </p>
+                                <p style="font-size: 14px;"><%= item.categoryDiscount %>% OFF <span>(Product Discount)</span> </p>
+                                <p>Discounted Price: ₹<%= item.discountedPrice.toFixed(2) %></p>
+                                <p>Quantity: <%= item.quantity %></p>
+                                </div>
+                            </div>
+                            <% }); %>
+                            <% } else { %>
+                                <p>No items selected.</p>
+                            <% } %>
+                            <div class="order-summary-footer">
+                                <p class="continue-btn" onclick="toggleOrderSummary()">Continue</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Options Section -->
+                    <div class="section">
+                        <div class="section-header">
+                            <span class="section-number">3</span>
+                            <span class="section-title">Payment Options</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="payment-option">
+                                <input type="radio" id="Razorpay" name="paymentMethod" value="Razorpay">
+                                <label for="Razorpay">Online payment<br><br><hr></label>
+                            </div>
+                            <div class="payment-option">
+                                <% if (totalAmount > walletBalance) { %>
+                                    <p style="color: rgba(100, 89, 69, 0.651); font-weight: 700;">Insufficient balance for Wallet Pay. You need ₹<%= totalAmount - walletBalance %> more.</p>
+                                <% } %>
+                                <input type="radio" id="WalletPay" name="paymentMethod" value="Wallet Pay"
+                                 <% if (totalAmount > walletBalance) { %> disabled <% } %>>
+                                <label for="WalletPay">Wallet Pay<br><br><hr></label>
+                            </div>
+                            <div class="payment-option">
+                                <% if (totalAmount > 1000) { %>
+                                    <p style="color: rgba(100, 89, 69, 0.651); font-weight: 700;">Orders over ₹1000 cannot use the Cash on Delivery payment method.</p>
+                                <% } %>
+                                <input type="radio" id="CashonDelivery" name="paymentMethod" value="Cash on Delivery"
+                                 <% if (totalAmount > 1000) { %> disabled <% } %> checked>
+                                <label for="CashonDelivery">Cash on Delivery<br><br><br></label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" id="placed_order" class="continue-button">Placed Order</button>
+                </div>
+                
+                <!-- Price Details Section -->
+                <div class="price-details">
+                    <h4>Price Details</h4>
+                    <div class="price-row">
+                        <span>Price (<%= totalQuantity %> item<%= totalQuantity > 1 ? 's' : '' %>)</span>
+                        <span>₹<%= subtotal.toFixed(2) %></span>
+                    </div>
+                    <div class="price-row">
+                        <span>Discount</span>
+                        <span><%= totalDiscount %>% OFF</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Discounted Price</span>
+                        <span>₹<%= cartTotalDiscountedPrice.toFixed(2) %></span>
+                    </div>
+                    <div class="price-row">
+                        <span>Shipping Fee:</span>
+                        <span>₹<%= deliveryCharge %></span>
+                    </div>
+                    <div class="price-row">
+                        <span>Coupon</span>
+                        <% if(cart.couponApplied){ %>
+                        <span class="free-text">
+                            Applied
+                            <i class="fa-solid fa-square-check tick"></i>
+                        </span>
+                        <% }else{ %>
+                        <span class="closs-text">
+                            Not Applied
+                            <i class="fa-solid fa-square-xmark"></i>
+                        </span>
+                        <% } %>
+                    </div>
+                    <div class="price-row">
+                        <span><strong>Total Amount</strong></span>
+                        <span><strong>
+                            ₹<%= cart.couponApplied ? newTotalAmount.toFixed(2) : totalAmount.toFixed(2) %>
+                        </strong></span>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+    </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+
+        // address
+        let selectedAddressInfo = {
+        name: '',
+        address: '',
+        locality: '',
+        district: '',
+        state: '',
+        pincode: ''
+    };
+
+    // toggle address details
+    function toggleAddressDropdown() {
+        const dropdown = document.querySelector('.dropdown-content');
+        const selectedAddress = document.querySelector('.selected-address');
+        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+            dropdown.style.display = 'block';
+            selectedAddress.style.display = 'none';
+        } else {
+            dropdown.style.display = 'none';
+            selectedAddress.style.display = 'block';
+        }
+    }
+
+    function selectAddress(name, address, locality, district, state, pincode) {
+        selectedAddressInfo = { name, address, locality, district, state, pincode };
+    }
+
+    function saveSelectedAddress() {
+        const dropdown = document.querySelector('.dropdown-content');
+        const selectedAddress = document.querySelector('.selected-address');
+        const displayedAddress = document.getElementById('displayedAddress');
+
+        displayedAddress.innerHTML = `<strong>${selectedAddressInfo.name}</strong> ${selectedAddressInfo.address}, ${selectedAddressInfo.locality}, ${selectedAddressInfo.district}, ${selectedAddressInfo.state} - ${selectedAddressInfo.pincode}`;
+
+        dropdown.style.display = 'none';
+        selectedAddress.style.display = 'block';
+    }
+
+
+    // toggle
+    function toggleOrderSummary() {
+        var dropdown = document.getElementById('orderSummaryDropdown');
+        var changeButton = document.querySelector('.cchange-button');
+
+        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+            dropdown.style.display = 'block';
+            changeButton.style.display = 'none';
+        } else {
+            dropdown.style.display = 'none';
+            changeButton.style.display = 'block';
+        }
+    }
+
+    // logic for order placed
+    document.getElementById('placed_order').addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+        const addressIdInput = document.querySelector('input[name="addressId"]:checked');
+        if (!addressIdInput) {
+            Swal.fire({
+            title: 'Error',
+            text: 'Please select a delivery address.',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+            });
+            return;
+        }
+        const addressId = addressIdInput.value;
+
+        const orderData = {
+            addressId: addressId
+        };
+
+        if (paymentMethod === 'Cash on Delivery') {
+            try {
+            const response = await fetch('/cod', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
+            });
+
+            const result = await response.json();
+
+                if (response.ok) {
+                    Swal.fire({
+                    title: 'Order Placed',
+                    text: 'Your order has been placed successfully.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                    }).then(() => {
+                    window.location.href = '/userorders';
+                    });
+                } else {
+                    Swal.fire({
+                    title: 'Error',
+                    text: result.message || 'An error occurred while placing your order.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while placing your order.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        } else if (paymentMethod === 'Wallet Pay') {
+            try {
+            const response = await fetch('/walletpay', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
+            });
+
+            const result = await response.json();
+
+                if (response.ok) {
+                    Swal.fire({
+                    title: 'Order Placed',
+                    text: 'Your order has been placed successfully.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                    }).then(() => {
+                    window.location.href = '/userorders';
+                    });
+                } else {
+                    Swal.fire({
+                    title: 'Error',
+                    text: result.message || 'An error occurred while placing your order.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while placing your order.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        } else if (paymentMethod === 'Razorpay') {
+            try {
+                const response = await fetch('/razorpay', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const options = {
+                        key: "rzp_test_59UVvgnLyIsqyL",
+                        amount: result.amount * 100,
+                        currency: result.currency,
+                        name: 'Orbit',
+                        description: 'Order Payment',
+                        order_id: result.orderId,
+                        handler: async function(response) {
+                            const verifyResponse = await fetch('/razorpay/verify', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    order_id: response.razorpay_order_id,
+                                    payment_id: response.razorpay_payment_id,
+                                    signature: response.razorpay_signature
+                                })
+                            });
+
+                            const verifyResult = await verifyResponse.json();
+
+                            Swal.fire({
+                                title: 'Order Placed',
+                                text: 'Your order has been placed successfully.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                window.location.href = '/userorders';
+                            });
+                        },
+                        modal: {
+                            ondismiss: function() {
+                                Swal.fire({
+                                    title: 'Order Placed with Payment Issue',
+                                    text: 'Your order has been placed, but payment failed. You can complete payment from your orders page.',
+                                    icon: 'info',
+                                    showConfirmButton: false,
+                                    timer: 2500
+                                }).then(() => {
+                                    window.location.href = '/userorders';
+                                });
+                            }
+                        },
+                        theme: {
+                            color: '#F37254'
+                        }
+                    };
+
+                    const razorpay = new Razorpay(options);
+                    razorpay.open();
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.message || 'An error occurred while placing your order.',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while placing your order.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+            }
+        } else {
+            document.getElementById('checkoutForm').submit();
+        }
+    });
+
+    </script>
+
+    <%- include('../partials/footer') %>

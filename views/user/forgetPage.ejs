@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .password-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+    }
+    .password-container h2 {
+        padding-bottom: 20px;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+    form input {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .forgot-button {
+        background-color: #ff9900;
+        color: #fff;
+        padding: 10px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .forgot-button:hover{
+        background-color: #ff7300 ;
+    }
+    </style>
+
+    <div class="password-container">
+        <h2>Forget Password</h2>
+        <% if (errorMessage) { %>
+        <p style="color: red;"><%=errorMessage%></p>
+        <% } %>
+        <form action="/forgot" method="post" id="forgetPassword">
+            <div style="color: red;" id="emailError"></div>
+            <input type="email" name="email" placeholder="Enter Your Email">
+            <button type="submit" class="forgot-button">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById('forgetPassword').addEventListener('submit',function(event){
+                event.preventDefault();
+                const form=event.target;
+                const formData=new FormData(form);
+
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                const email=formData.get('email');
+                let error=false;
+
+                function setError(elementId,message){
+                    const element=document.getElementById(elementId);
+                    element.innerText=message;
+                    element.classList.remove('hidden');
+                    setTimeout(() => {
+                        element.classList.add('hidden');
+                    }, 3000);
+                }
+
+                if(!email){
+                    error=true;
+                    setError('emailError','Enter your email')
+                }else if(!emailPattern.test(email)){
+                    error=true;
+                    setError('emailError','Enter a valid email address')
+                }
+
+                if(!error){
+                    form.submit();
+                }
+            })
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<%- include('../partials/header') %>
+
+<style>
+  .product-box-area {
+    padding: 0 5%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 40px;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    margin-left: -30px;
+  }
+</style>
+
+<section id="prod" class="sect">
+    
+  <% if (showSidebar) { %>
+  <div class="sidebar">
+    <div class="filter-header">
+      <h3>FILTERS</h3>
+      <a href="/productlist" id="clear_filter" class="clear-filter">Clear Filter</a>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="filter-section">
+      <h4 onclick="toggleSection(this)">
+        Categories <i class="fa-solid fa-caret-down"></i>
+      </h4>
+      <div class="filter-content">
+        <div class="checkbox-group">
+          <ul>
+            <% categories.forEach(function (category) { %>
+              <li>
+                <label>
+                  <input
+                    type="checkbox"
+                    <% if (category._id.toString() === selectedCategoryId) { %> checked <% } %>
+                    onclick="window.location.href='/productlist?category=<%= category._id %>&sort=<%= sort || '' %>&search=<%= searchQuery || '' %>'"
+                  >
+                  <%= category.categoryName %>
+                </label>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+      <hr />
+    </div>
+
+    <!-- Sorting popularity -->
+    <div class="filter-section">
+      <h4>
+        <a href="/productlist?sort=popularity&category=<%= selectedCategoryId || '' %>&search=<%= searchQuery || '' %>">
+          Popularity
+        </a>
+      </h4>
+      <hr />
+    </div>
+    <!-- Sorting price -->
+    <div class="filter-section">
+      <h4 onclick="toggleSection(this)">
+        Price <i class="fa-solid fa-caret-down"></i>
+      </h4>
+      <div class="filter-content">
+        <div class="checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              id="lowToHigh"
+              <% if (sort === 'priceLowToHigh') { %> checked <% } %>
+            >
+            Low to High
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              id="highToLow"
+              <% if (sort === 'priceHighToLow') { %> checked <% } %>
+            >
+            High to Low
+          </label>
+        </div>
+      </div>
+      <hr />
+    </div>
+    <!-- Sorting featured -->
+    <div class="filter-section">
+      <h4>
+        <a href="/productlist?sort=featured&category=<%= selectedCategoryId || '' %>&search=<%= searchQuery || '' %>">
+          Featured
+        </a>
+      </h4>
+      <hr />
+    </div>
+    <!-- Sorting newarrivals -->
+    <div class="filter-section">
+      <h4>
+        <a href="/productlist?sort=newArrivals&category=<%= selectedCategoryId || '' %>&search=<%= searchQuery || '' %>">
+          New Arrivals
+        </a>
+      </h4>
+      <hr />
+    </div>
+    <!-- Sorting ascending -->
+    <div class="filter-section">
+      <h4>
+        <a href="/productlist?sort=alphabeticalAsc&category=<%= selectedCategoryId || '' %>&search=<%= searchQuery || '' %>">
+          aA - zZ
+        </a>
+      </h4>
+      <hr />
+    </div>
+    <!-- Sorting descending -->
+    <div class="filter-section">
+      <h4>
+        <a href="/productlist?sort=alphabeticalDesc&category=<%= selectedCategoryId || '' %>&search=<%= searchQuery || '' %>">
+          zZ - aA
+        </a>
+      </h4>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (showPagination) { %>
+  <div class="pagination">
+    <!-- Previous Arrow -->
+    <% if (currentPage > 1) { %>
+      <a href="/productlist/<%= currentPage - 1 %>" class="arrow-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+    <% } else { %>
+      <span class="arrow-btn disabled">
+        <i class="fa-solid fa-arrow-left"></i>
+      </span>
+    <% } %>
+  
+    <!-- Next Arrow -->
+    <% if (currentPage < totalPages) { %>
+      <a href="/productlist/<%= currentPage + 1 %>" class="arrow-btn">
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    <% } else { %>
+      <span class="arrow-btn disabled">
+        <i class="fa-solid fa-arrow-right"></i>
+      </span>
+    <% } %>
+  </div>
+  <% } %>
+
+    <% if (message) { %>
+      <div class="empty_product">
+        <h4 style="color: #00000052; font-weight: 700; font-size: 20px; margin-top: 30px;"><%= message %></h4>
+        <img src="/images/emptyporduct.png" alt="empty Product">
+      </div>
+      <% } else { %>
+
+      <div class="product-box-area">
+        <% products.forEach((product) => { %>
+        <div
+          class="box"
+          onclick="window.location.href='/productdetails/<%= product._id %>'"
+        >
+          <img
+            src="<%= product.productImage[0] %>"
+            alt="<%= product.productName %>"
+          />
+          <div class="overlay">
+            <h3><%= product.productName %></h3>
+            <br />
+            <h4>₹<%= product.finalDiscountedPrice.toFixed(2) %></h4>
+            <h6><%= Math.max(product.discount || 0, product.category.discount || 0) %>% OFF</h6>
+            <form action="/wishlist/<%= product._id %>" method="POST">
+              <button type="submit"><i class="fa-solid fa-heart fav"></i></button>
+            </form>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    <% } %>
+  
+</section>
+
+<script>
+
+  // clear filter
+  document.getElementById('clear_filter').addEventListener('click', function(){
+    window.location.reload();
+    window.location.href='/productList';
+  })
+
+  // toggle section
+  function toggleSection(element) {
+    const content = element.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    }
+    
+    // price low to high
+    document.getElementById('lowToHigh').addEventListener('click', function() {
+    const selectedCategoryId = '<%= selectedCategoryId ? selectedCategoryId : "" %>';
+    const searchQuery = '<%= searchQuery ? encodeURIComponent(searchQuery) : "" %>';
+    window.location.href = `/productlist?sort=priceLowToHigh&category=${selectedCategoryId}&search=${searchQuery}`;
+  });
+
+  // price high to low
+  document.getElementById('highToLow').addEventListener('click', function() {
+    const selectedCategoryId = '<%= selectedCategoryId ? selectedCategoryId : "" %>';
+    const searchQuery = '<%= searchQuery ? encodeURIComponent(searchQuery) : "" %>';
+    window.location.href = `/productlist?sort=priceHighToLow&category=${selectedCategoryId}&search=${searchQuery}`;
+  });
+
+  // pagination height style
+  document.addEventListener('DOMContentLoaded', function() {
+      const productBoxes = document.querySelectorAll('.box');
+      const pagination = document.querySelector('.pagination');
+      const productBoxArea = document.querySelector('.product-box-area');
+
+      if (productBoxes.length <= 6) {
+          pagination.style.top = '800px';
+          productBoxArea.style.marginBottom = '450px';
+      } else {
+          pagination.style.top = '1130px';
+          productBoxArea.style.marginBottom = '100px';
+      }
+  });
+
+</script>
+
+<%- include('../partials/footer') %>

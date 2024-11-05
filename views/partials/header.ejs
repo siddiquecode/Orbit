@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Orbit.com</title>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="/css/user.css">
+    </head>
+
+    <body>
+
+        <section id="header">
+            <a href="/"><img src="/images/logo.png" class="logo" alt=""></a>
+            <div>
+                <ul id="navbar">
+                    <li>
+                      <form action="/search" method="get" id="searchForm">
+                        <div class="search-container">
+                          <input type="text" name="search" placeholder="Search" class="search-input" id="searchInput"
+                          value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+                          <i class="fa-solid fa-xmark" id="clearSearch" style="display: none; cursor: pointer;
+                          margin-top: 14px; padding: 1px 3px; height: 20px; width: 20px;"></i>
+                          <button class="search-button"><i class="fas fa-search"></i></button>
+                        </div>
+                      </form>
+                    </li>
+                    <li>
+                        <a class="<%= pageName === 'home' ? 'active' : '' %>" href="/">Home</a>
+                    </li>
+                      <li>
+                        <a class="<%= pageName === 'productList' ? 'active' : '' %>" href="/productlist">Products</a>
+                      </li>                      
+                      <li>
+                        <% if (isLoggedIn && user) { %>
+                          <a href="/userlogout">Logout</a>
+                        <% } else { %>
+                          <a href="/userlogin">Login</a>
+                        <% } %>
+                      </li>
+                    <li><a class="<%= pageName === 'profile' ? 'active' : '' %>" href="/userprofile"><i class="fa-solid fa-user account"></i></a></li>
+                    <li><a class="<%= pageName === 'cart' ? 'active' : '' %>" href="/cart"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                </ul>
+            </div>
+        </section>
+
+        <script>
+
+            // clear search input
+            const searchInput = document.getElementById('searchInput');
+            const clearSearch = document.getElementById('clearSearch');
+            const searchForm = document.getElementById('searchForm');
+
+            if (searchInput.value) {
+              clearSearch.style.display = 'inline';
+            }
+
+            searchInput.addEventListener('input', () => {
+              clearSearch.style.display = searchInput.value ? 'inline' : 'none';
+            });
+
+            clearSearch.addEventListener('click', () => {
+              searchInput.value = '';
+              clearSearch.style.display = 'none';
+              window.location.reload();
+              window.location.href = '/productlist';
+            });
+          
+        </script>

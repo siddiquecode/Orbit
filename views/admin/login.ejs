@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+   
+    <style>
+
+        body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f8ff;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        }
+    
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.425);
+            text-align: center;
+        }
+    
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+    
+        .login-form h2 {
+            margin-bottom: 20px;
+        }
+    
+        .input-box {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    
+        .btn {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .btn:hover {
+            background-color: #444;
+        }
+    
+    </style>
+
+</head>
+<body>
+    <div class="login-container">
+        <h2>ADMIN LOGIN</h2>
+        <%if(errorMessage){ %>
+            <p style="color: red;"><%=errorMessage%></p>
+        <% } %>
+        <form class="login-form" action="/admin" method="post">
+            <input type="email" name="email" placeholder="Enter Email" class="input-box">
+            <input type="password" name="password" placeholder="Enter Password" class="input-box">
+            <button type="submit" class="btn">LOGIN</button>
+        </form>
+    </div>
+</body>
+</html>

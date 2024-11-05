@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+    
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.699);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+    
+        .login-container h2 {
+            padding-bottom: 20px;
+            color: #333;
+            margin-top: 0;
+        }
+    
+        .login-container p {
+            margin: 10px 0;
+            font-weight: 600;
+            color: #221e1e;
+        }
+    
+        .login-container #forgot {
+            text-decoration: none;
+            color: #002fff;
+            text-align: end;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 10px;
+        }
+    
+        .login-container #forgot:hover {
+            text-decoration: underline;
+        }
+    
+        .login-container a {
+            color: #002fff;
+            font-weight: 800;
+            text-decoration: none;
+        }
+    
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+    
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    
+        .social-login a {
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #000000;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+    
+        .google-login {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid rgba(0, 0, 0, 0.185);
+        }
+    
+        .google-login:hover {
+            background-color: #f5f5f5;
+        }
+    
+        .ggl {
+            padding-right: 10px;
+            color: #1100ff;
+        }
+    
+        .divider {
+            margin: 20px 0;
+            font-size: 14px;
+            color: #221e1e;
+            position: relative;
+        }
+    
+        .divider::before,
+        .divider::after {
+            content: '';
+            height: 1px;
+            background-color: #000000b2;
+            position: absolute;
+            top: 50%;
+            width: 40%;
+        }
+    
+        .divider::before {
+            left: 0;
+        }
+    
+        .divider::after {
+            right: 0;
+        }
+    
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+    
+        form input {
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+            width: 93%;
+        }
+    
+        form input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    
+        .login-button {
+            background-color: #003cff;
+            color: #fff;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+    
+        .login-button:hover {
+            background-color: #0032d6;
+        }
+    
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+    
+        .toggle-password {
+            position: absolute;
+            right: 5px;
+            top: 40%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+    
+        .toggle-password i {
+            font-size: 15px;
+            color: #666;
+        }
+    </style>
+
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="/images/login video.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="overlay"></div>
+
+        <div class="login-container">
+            <h2>Log In</h2>
+            <% if (errorMessage) { %>
+            <p style="color: red;"><%= errorMessage %></p>
+            <% } %>
+            <% if (successMessage) { %>
+            <p style="color: rgb(54 195 12); font-weight: 600;"><%= successMessage %></p>
+            <% } %>
+
+            <form action="/userlogin" method="post" id="loginForm">
+                <div style="color: red;" id="emailError"></div>
+                <input type="email" name="email" placeholder="Email Id">
+                <div style="color: red;" id="passwordError"></div>
+                <div class="password-wrapper">
+                    <input type="password" name="password" placeholder="Password" id="loginPassword">
+                    <span class="toggle-password" onclick="togglePassword('loginPassword')">
+                        <i class="fa fa-eye" id="loginPasswordIcon"></i>
+                    </span>
+                </div>
+                <a href="/forgot" id="forgot">Forgot password?</a>
+                <button type="submit" class="login-button">Log in</button>
+            </form>
+            <div class="divider">Or</div>
+            <div class="social-login">
+                <a href="/auth/google" class="google-login">
+                    <i class="fa-brands fa-google ggl"></i> Log in with Google
+                </a>
+            </div>
+            <p>Don't have an account? <a href="/usersignup">Sign up</a></p>
+        </div>
+
+    <script>
+
+        // avoid going to back
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        // login validation
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const email = formData.get('email');
+        const password = formData.get('password');
+        let error = false;
+
+        function setError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerText = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        document.getElementById('emailError').innerText = '';
+        document.getElementById('passwordError').innerText = '';
+
+        if (!email && !password) {
+            error = true;
+            setError('emailError', 'Enter your email and password');
+        } else if (!email) {
+            error = true;
+            setError('emailError', 'Enter your email');
+        } else if (!password) {
+            error = true;
+            setError('passwordError', 'Enter your password');
+        }
+
+        if (!error) {
+            form.submit();
+        }
+    });
+
+        // password
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + 'Icon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+
+    </script>
+    
+</body>
+</html>
