@@ -51,6 +51,11 @@
             padding-top: 0.625rem;
         }
 
+        .nav-links form button {
+            border: none;
+            background-color: #ffffff;
+        }
+
         .nav-link {
             display: flex;
             align-items: center;
@@ -224,10 +229,12 @@
                         <i class="fa-solid fa-ticket"></i>
                         <span>Coupon</span>
                     </a>
-                    <a href="/userlogout" class="nav-link">
-                        <i class="fas fa-power-off"></i>
-                        <span>Logout</span>
-                    </a>
+                    <form action="/userlogout" method="POST">
+                        <button type="submit" class="nav-link">
+                          <i class="fas fa-power-off"></i>
+                          <span>Logout</span>
+                        </button>
+                    </form> 
                 </div>
             </div>
 

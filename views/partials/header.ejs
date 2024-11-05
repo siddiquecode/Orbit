@@ -20,7 +20,7 @@
             <div>
                 <ul id="navbar">
                     <li>
-                      <form action="/search" method="get" id="searchForm">
+                      <form action="/search" method="po" id="searchForm">
                         <div class="search-container">
                           <input type="text" name="search" placeholder="Search" class="search-input" id="searchInput"
                           value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
@@ -38,7 +38,11 @@
                       </li>                      
                       <li>
                         <% if (isLoggedIn && user) { %>
-                          <a href="/userlogout">Logout</a>
+                          <form action="/userlogout" method="POST">
+                            <button type="submit">
+                              <span>Logout</span>
+                            </button>
+                          </form>
                         <% } else { %>
                           <a href="/userlogin">Login</a>
                         <% } %>

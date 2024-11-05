@@ -22,22 +22,19 @@
             position: relative;
             overflow: hidden;
         }
-
-        .video-background {
+    
+        .background-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background-image: url('/images/background.jfif');
+            background-size: cover;
+            background-position: center;
             z-index: -1;
         }
     
-        .video-background video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .overlay {
             position: absolute;
             top: 0;
@@ -204,44 +201,41 @@
             color: #666;
         }
     </style>
-
-        <div class="video-background">
-            <video autoplay muted loop playsinline>
-                <source src="/images/login video.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div class="overlay"></div>
-
-        <div class="login-container">
-            <h2>Log In</h2>
-            <% if (errorMessage) { %>
-            <p style="color: red;"><%= errorMessage %></p>
-            <% } %>
-            <% if (successMessage) { %>
-            <p style="color: rgb(54 195 12); font-weight: 600;"><%= successMessage %></p>
-            <% } %>
-
-            <form action="/userlogin" method="post" id="loginForm">
-                <div style="color: red;" id="emailError"></div>
-                <input type="email" name="email" placeholder="Email Id">
-                <div style="color: red;" id="passwordError"></div>
-                <div class="password-wrapper">
-                    <input type="password" name="password" placeholder="Password" id="loginPassword">
-                    <span class="toggle-password" onclick="togglePassword('loginPassword')">
-                        <i class="fa fa-eye" id="loginPasswordIcon"></i>
-                    </span>
-                </div>
-                <a href="/forgot" id="forgot">Forgot password?</a>
-                <button type="submit" class="login-button">Log in</button>
-            </form>
-            <div class="divider">Or</div>
-            <div class="social-login">
-                <a href="/auth/google" class="google-login">
-                    <i class="fa-brands fa-google ggl"></i> Log in with Google
-                </a>
+    
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    
+    <div class="login-container">
+        <h2>Log In</h2>
+        <% if (errorMessage) { %>
+        <p style="color: red;"><%= errorMessage %></p>
+        <% } %>
+        <% if (successMessage) { %>
+        <p style="color: rgb(54 195 12); font-weight: 600;"><%= successMessage %></p>
+        <% } %>
+    
+        <form action="/userlogin" method="post" id="loginForm">
+            <div style="color: red;" id="emailError"></div>
+            <input type="email" name="email" placeholder="Email Id">
+            <div style="color: red;" id="passwordError"></div>
+            <div class="password-wrapper">
+                <input type="password" name="password" placeholder="Password" id="loginPassword">
+                <span class="toggle-password" onclick="togglePassword('loginPassword')">
+                    <i class="fa fa-eye" id="loginPasswordIcon"></i>
+                </span>
             </div>
-            <p>Don't have an account? <a href="/usersignup">Sign up</a></p>
+            <a href="/forgot" id="forgot">Forgot password?</a>
+            <button type="submit" class="login-button">Log in</button>
+        </form>
+        <div class="divider">Or</div>
+        <div class="social-login">
+            <a href="/auth/google" class="google-login">
+                <i class="fa-brands fa-google ggl"></i> Log in with Google
+            </a>
         </div>
+        <p>Don't have an account? <a href="/usersignup">Sign up</a></p>
+    </div>
+    
 
     <script>
 

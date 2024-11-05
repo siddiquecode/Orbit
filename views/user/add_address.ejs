@@ -13,7 +13,7 @@
             display: flex;
         }
 
-        .sidebar {
+        .a-sidebar {
             margin-left: -80px;
             width: 280px;
             padding: 1rem;
@@ -49,6 +49,11 @@
 
         .nav-links {
             padding-top: 0.625rem;
+        }
+
+        .nav-links form button {
+            border: none;
+            background-color: #ffffff;
         }
 
         .nav-link {
@@ -193,7 +198,7 @@
     <div class="main-container">
         <div class="wrapper">
 
-            <div class="sidebar">
+            <div class="a-sidebar">
                 <div class="profile">
                     <div class="profile-img"> <img src="/images/dp.jpg" alt=""></div>
                     
@@ -224,10 +229,12 @@
                         <i class="fa-solid fa-ticket"></i>
                         <span>Coupon</span>
                     </a>
-                    <a href="/userlogout" class="nav-link">
-                        <i class="fas fa-power-off"></i>
-                        <span>Logout</span>
-                    </a>
+                    <form action="/userlogout" method="POST">
+                        <button type="submit" class="nav-link">
+                          <i class="fas fa-power-off"></i>
+                          <span>Logout</span>
+                        </button>
+                    </form> 
                 </div>
             </div>
 

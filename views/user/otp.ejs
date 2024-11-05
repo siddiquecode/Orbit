@@ -97,10 +97,11 @@
                 <input type="text" maxlength="1" class="otp" name="otp5" required>
                 <input type="text" maxlength="1" class="otp" name="otp6" required>
             </div>
-           
             <button type="submit">Verify OTP</button>
         </form>
+
         <p id="timer">Resend OTP in <span id="time">60</span> seconds</p>
+
         <form action="/resentOtp" method="post">
         <button id="resendBtn" type="submit" disabled>Resend OTP</button>
         </form>

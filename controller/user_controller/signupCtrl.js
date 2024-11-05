@@ -96,7 +96,7 @@ const signuppost = async (req, res) => {
       if (!existingUser.password) {
         req.flash(
           "error",
-          "This email is registered with Google. Please use oogle login."
+          "This email is registered with Google. Please use Google login."
         );
         return res.redirect("/userlogin");
       } else {
@@ -106,31 +106,15 @@ const signuppost = async (req, res) => {
     }
 
     let referrer;
-    let activeOffer;
-
     if (referrelcode) {
       referrer = await userDB.findOne({ referralCode: referrelcode });
-
       if (!referrer) {
         req.flash("error", "Invalid referral code.");
         return res.redirect("/usersignup");
       }
 
-      activeOffer = await offerDB.findOne({
-        offerType: "Signup Referral Offer",
-        status: "Active",
-        startDate: { $lte: new Date() },
-        endDate: { $gte: new Date() },
-      });
-
-      if (!activeOffer) {
-        req.flash("error", "No active Signup Referral offer.");
-        return res.redirect("/usersignup");
-      }
-
       req.session.referralCode = referrelcode;
       req.session.referrer = referrer;
-      req.session.activeOffer = activeOffer;
     }
 
     const referralCode = generateReferralCode();
@@ -171,7 +155,7 @@ const getotp = async (req, res) => {
 const postotp = async (req, res) => {
   try {
     const { otp } = req.body;
-    console.log("entered OTP ", otp);
+    console.log("Entered OTP:", otp);
 
     const storedOtp = req.session.otp;
 
@@ -201,20 +185,21 @@ const postotp = async (req, res) => {
         items: [],
       });
 
-      const { referralCode } = req.session;
       const referrer = req.session.referrer;
-      const activeOffer = req.session.activeOffer;
 
-      if (referralCode && activeOffer) {
+      if (referrer) {
+        const referrerCredit = 100;
+        const refereeCredit = 50;
+
         await WalletDB.findOneAndUpdate(
           { user: referrer._id },
           {
-            $inc: { balance: activeOffer.referrerCredit },
+            $inc: { balance: referrerCredit },
             $push: {
               transactions: {
                 type: "Credit",
-                amount: activeOffer.referrerCredit,
-                description: `Referral bonus for referring ${user.firstname} ${user.lastname} (Offer: ${activeOffer.offerName})`,
+                amount: referrerCredit,
+                description: `Referral bonus for referring ${user.firstname} ${user.lastname}`,
               },
             },
           }
@@ -223,12 +208,12 @@ const postotp = async (req, res) => {
         await WalletDB.findOneAndUpdate(
           { user: newUser._id },
           {
-            $inc: { balance: activeOffer.refereeCredit },
+            $inc: { balance: refereeCredit },
             $push: {
               transactions: {
                 type: "Credit",
-                amount: activeOffer.refereeCredit,
-                description: `Referral bonus for using a referral code (Offer: ${activeOffer.offerName})`,
+                amount: refereeCredit,
+                description: "Referral bonus for using a referral code",
               },
             },
           }
@@ -239,7 +224,6 @@ const postotp = async (req, res) => {
       req.session.credential = null;
       req.session.referralCode = null;
       req.session.referrer = null;
-      req.session.activeOffer = null;
 
       return res.redirect("/userlogin");
     } else {

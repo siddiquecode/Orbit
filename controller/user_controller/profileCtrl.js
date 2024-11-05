@@ -68,27 +68,6 @@ const editprofile = async (req, res) => {
   }
 };
 
-const get_editEmail = async (req, res) => {
-  try {
-    res.render("user/edit_email", {
-      user: req.user,
-      isLoggedIn: true,
-      pageName: "edit_email",
-      errorMessage: req.flash("error"),
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const updatecancel = async (req, res) => {
-  try {
-    res.redirect("/userprofile");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const get_changepassword = async (req, res) => {
   try {
     res.render("user/change_password", {
@@ -144,8 +123,6 @@ module.exports = {
   userprofile,
   edit_getprofile,
   editprofile,
-  get_editEmail,
-  updatecancel,
   get_changepassword,
   changepassword,
 };

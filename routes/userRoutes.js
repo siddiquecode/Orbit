@@ -38,7 +38,7 @@ router.get(
   homecontroller.productdetails
 );
 router.get("/products/:categoryId", homecontroller.categories);
-router.get("/userlogout", homecontroller.logout);
+router.post("/userlogout", homecontroller.logout);
 
 // ....................signup
 router.get("/usersignup", signupcontroller.signup);
@@ -70,7 +70,6 @@ router.post(
   userAuthenticated,
   profilecontroller.editprofile
 );
-router.get("/editEmail", userAuthenticated, profilecontroller.get_editEmail);
 router.get(
   "/changepassword",
   userAuthenticated,
@@ -81,7 +80,6 @@ router.post(
   userAuthenticated,
   profilecontroller.changepassword
 );
-router.get("/updatecancel", userAuthenticated, profilecontroller.updatecancel);
 
 //  .................... address
 router.get("/useraddress", userAuthenticated, Addresscontroller.useraddress);

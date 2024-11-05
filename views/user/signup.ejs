@@ -16,21 +16,19 @@
             box-sizing: border-box;
         }
 
-        .video-background {
+     
+        .background-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background-image: url('/images/background.jfif');
+            background-size: cover;
+            background-position: center;
             z-index: -1;
         }
     
-        .video-background video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .overlay {
             position: absolute;
             top: 0;
@@ -186,11 +184,7 @@
         }
     </style>
 
-        <div class="video-background">
-            <video autoplay muted loop playsinline>
-                <source src="/images/login video.mp4" type="video/mp4">
-            </video>
-        </div>
+        <div class="background-image"></div>
         <div class="overlay"></div>
 
         <div class="login-container">
