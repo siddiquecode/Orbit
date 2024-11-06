@@ -96,7 +96,7 @@
             <nav class="nav">
                 <ul>
                     <li><a id="dashboard" class="active" href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/users"><i class="fas fa-users"></i> User Management</a></li>
                     <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
                     <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
                     <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
@@ -105,7 +105,9 @@
                     <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
                 </ul>
             </nav>
-            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+            <form action="/admin/logout" method="POST">
+              <button type="submit" class="logout">Log Out</button>
+            </form>
         </aside>
 
         <main class="main-content">

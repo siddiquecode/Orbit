@@ -246,7 +246,7 @@
             <nav class="nav">
                 <ul>
                     <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/users"><i class="fas fa-users"></i> User Management</a></li>
                     <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
                     <li><a id="category" class="active" href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
                     <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
@@ -255,7 +255,9 @@
                     <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
                 </ul>
             </nav>
-            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+            <form action="/admin/logout" method="POST">
+                <button type="submit" class="logout">Log Out</button>
+            </form>
         </aside>
         <main class="main-content">
             <header class="header">
@@ -289,17 +291,11 @@
                           </td>
                           <td>
                             <button class="edit-category" id="editCategoryBtn" style="margin-bottom: 5px;">Edit</button>
-                            <!-- <form action="/admin/deletecategory/<%= category._id %>" method="post">
-                              <button type="submit" id="delete" class="action-btn delete">Delete</button>
-                            </form> -->
+
                             <% if (category.isBlocked) { %>
-                                <form action="/admin/unblockcategory/<%= category._id %>" method="POST">
-                                    <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
-                                </form>
+                                <button id="unblock" class="action-btn unblock" onclick="handleCategoryAction('<%= category._id %>', 'unblock')">Unblock</button>
                             <% } else { %>
-                                <form action="/admin/blockcategory/<%= category._id %>" method="POST">
-                                    <button type="submit" id="block" class="action-btn block">Soft delete</button>
-                                </form>
+                                <button id="block" class="action-btn block" onclick="handleCategoryAction('<%= category._id %>', 'block')">Soft delete</button>
                             <% } %>
                           </td>
                         </tr>
@@ -409,6 +405,24 @@
     
 
     <script>
+
+        // block and unblock category
+        async function handleCategoryAction(categoryId, action) {
+            try {
+                const response = await fetch(`/admin/categories/${categoryId}/${action}`, {
+                method: 'PATCH',
+                });
+
+                if (response.ok) {
+                location.reload();
+                } else {
+                console.log('Failed to update category status:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+        }
 
         /*-------------------------------- Add category-------------------------------- */
 

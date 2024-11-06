@@ -301,7 +301,7 @@
 
                 try {
                     const response = await fetch('/applyCoupon', {
-                        method: 'POST',
+                        method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
                         },
@@ -348,13 +348,11 @@
             closeMark.addEventListener('click', async () => {
                 try {
                     const response = await fetch('/removeCoupon', {
-                        method: 'POST',
+                        method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                     });
-
-                    const data = await response.json();
 
                     if (response.ok) {
                         couponSelect.value = "";
@@ -365,7 +363,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Coupon Removed',
-                            text: data.message,
+                            text: 'The coupon has been successfully removed',
                             showConfirmButton: false,
                             timer: 1500,
                         });
@@ -374,6 +372,7 @@
                             window.location.reload();
                         }, 1500);
                     } else {
+                        const data = await response.json();
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

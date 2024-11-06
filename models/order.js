@@ -16,19 +16,15 @@ const orderSchema = new mongoose.Schema(
         },
         productName: {
           type: String,
-          required: true,
         },
         price: {
           type: Number,
-          required: true,
         },
         description: {
           type: String,
-          required: true,
         },
         quantity: {
           type: Number,
-          required: true,
         },
         productImage: {
           type: [String],
@@ -40,7 +36,6 @@ const orderSchema = new mongoose.Schema(
         },
         categoryName: {
           type: String,
-          required: true,
         },
         categoryDiscount: {
           type: Number,
@@ -49,7 +44,6 @@ const orderSchema = new mongoose.Schema(
         },
         discountedPrice: {
           type: Number,
-          required: true,
         },
         status: {
           type: String,
@@ -81,7 +75,6 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      required: true,
     },
     paymentStatus: {
       type: String,
@@ -97,7 +90,6 @@ const orderSchema = new mongoose.Schema(
     },
     totalAmount: {
       type: Number,
-      required: true,
     },
     deliveryAddress: {
       name: { type: String, required: true },
@@ -110,7 +102,6 @@ const orderSchema = new mongoose.Schema(
     },
     razorpayOrderId: {
       type: String,
-      unique: true,
     },
   },
   { timestamps: true }

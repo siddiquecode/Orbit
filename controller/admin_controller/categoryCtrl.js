@@ -140,10 +140,10 @@ const blockcategory = async (req, res) => {
     const categoryId = req.params.id;
     await categoryDB.findByIdAndUpdate(categoryId, { isBlocked: true });
     await productDB.updateMany({ category: categoryId }, { isBlocked: true });
-    res.redirect("/admin/getcategory");
+    res.status(200).json({ message: "Category blocked successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal Server error");
+    res.status(500).json({ message: "Failed to unblock category" });
   }
 };
 
@@ -152,25 +152,10 @@ const unblockcategory = async (req, res) => {
     const categoryId = req.params.id;
     await categoryDB.findByIdAndUpdate(categoryId, { isBlocked: false });
     await productDB.updateMany({ category: categoryId }, { isBlocked: false });
-    res.redirect("/admin/getcategory");
+    res.status(200).json({ message: "Category unblocked successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal Server error");
-  }
-};
-
-const deletecategory = async (req, res) => {
-  try {
-    const categoryId = req.params.id;
-
-    await productDB.deleteMany({ category: categoryId });
-
-    await categoryDB.findByIdAndDelete(categoryId);
-
-    res.redirect("/admin/getcategory");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Failed to unblock category" });
   }
 };
 
@@ -180,5 +165,4 @@ module.exports = {
   editcategory,
   blockcategory,
   unblockcategory,
-  deletecategory,
 };

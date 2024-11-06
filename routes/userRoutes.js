@@ -116,7 +116,7 @@ router.post(
 router.get(
   "/checkoutAddress/:id",
   userAuthenticated,
-  checkoutcontroller.checkout_address
+  checkoutcontroller.editcheckout_address
 );
 router.post(
   "/checkoutAddress/:id",
@@ -141,7 +141,6 @@ router.post(
 );
 
 //  .................... orders
-router.get("/orderplaced", userAuthenticated, ordercontroller.orderplaced);
 router.get("/userorders", userAuthenticated, ordercontroller.userorders);
 router.get(
   "/orderDetails/:id",
@@ -203,7 +202,7 @@ router.get("/userwallet", userAuthenticated, wishlistcontroller.userwallet);
 
 //  .................... coupon
 router.get("/usercoupon", userAuthenticated, couponcontroller.usercoupon);
-router.post("/applyCoupon", userAuthenticated, couponcontroller.apply_coupon);
-router.post("/removeCoupon", userAuthenticated, couponcontroller.remove_coupon);
+router.patch("/applyCoupon", userAuthenticated, couponcontroller.apply_coupon);
+router.delete("/removeCoupon", userAuthenticated, couponcontroller.remove_coupon);
 
 module.exports = router;

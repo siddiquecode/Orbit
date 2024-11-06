@@ -106,8 +106,8 @@ const editaddress = async (req, res) => {
 
 const delete_address = async (req, res) => {
   try {
-    const Id = req.params.id;
-    const address = await addressDB.findByIdAndDelete(Id);
+    const addressId = req.params.id;
+    const address = await addressDB.findByIdAndDelete(addressId);
 
     res.redirect("/useraddress");
   } catch (error) {

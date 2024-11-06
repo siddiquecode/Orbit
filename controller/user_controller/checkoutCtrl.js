@@ -156,7 +156,7 @@ const add_checkoutAddress = async (req, res) => {
   }
 };
 
-const checkout_address = async (req, res) => {
+const editcheckout_address = async (req, res) => {
   try {
     const addressId = req.params.id;
     const user = req.user;
@@ -588,7 +588,7 @@ module.exports = {
   checkout_get,
   get_checkoutAddress,
   add_checkoutAddress,
-  checkout_address,
+  editcheckout_address,
   update_address,
   codController,
   walletPayController,

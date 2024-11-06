@@ -40,12 +40,12 @@ adminRouter.get(
   adminAuthenticated,
   adminController.getdashboard
 );
-adminRouter.get("/logout", adminController.logout);
+adminRouter.post("/logout", adminController.logout);
 
 // .................... user
-adminRouter.get("/getuser", adminAuthenticated, adminController.getuser);
-adminRouter.post("/blockuser/:id", adminController.blockuser);
-adminRouter.post("/unblockuser/:id", adminController.unblockuser);
+adminRouter.get("/users", adminAuthenticated, adminController.getuser);
+adminRouter.patch("/users/:id/block", adminController.blockuser);
+adminRouter.patch("/users/:id/unblock", adminController.unblockuser);
 
 // .................... category
 adminRouter.get(
@@ -66,9 +66,11 @@ adminRouter.post(
   ),
   categoryController.editcategory
 );
-adminRouter.post("/blockcategory/:id", categoryController.blockcategory);
-adminRouter.post("/unblockcategory/:id", categoryController.unblockcategory);
-adminRouter.post("/deletecategory/:id", categoryController.deletecategory);
+adminRouter.patch("/categories/:id/block", categoryController.blockcategory);
+adminRouter.patch(
+  "/categories/:id/unblock",
+  categoryController.unblockcategory
+);
 
 // .................... product
 adminRouter.get(

@@ -9,31 +9,24 @@ const addressSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
     },
     mobileNumber: {
       type: String,
-      required: true,
     },
     pincode: {
       type: String,
-      required: true,
     },
     locality: {
       type: String,
-      required: true,
     },
     address: {
       type: String,
-      required: true,
     },
     district: {
       type: String,
-      required: true,
     },
     state: {
       type: String,
-      required: true,
     },
 
     landmark: String,
@@ -42,7 +35,6 @@ const addressSchema = new mongoose.Schema(
       type: String,
       enum: ["home", "work"],
       default: "home",
-      required: true,
     },
   },
   { timestamps: true }

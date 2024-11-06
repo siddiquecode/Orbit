@@ -326,10 +326,10 @@ const blockuser = async (req, res) => {
   try {
     const userId = req.params.id;
     await userDB.findByIdAndUpdate(userId, { isBlocked: true });
-    res.redirect("/admin/getuser");
+    res.status(204).send();
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Failed to block user" });
   }
 };
 
@@ -337,10 +337,10 @@ const unblockuser = async (req, res) => {
   try {
     const userId = req.params.id;
     await userDB.findByIdAndUpdate(userId, { isBlocked: false });
-    res.redirect("/admin/getuser");
+    res.status(204).send();
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Failed to unblock user" });
   }
 };
 

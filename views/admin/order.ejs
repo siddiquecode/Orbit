@@ -132,7 +132,7 @@
             <nav class="nav">
                 <ul>
                     <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/users"><i class="fas fa-users"></i> User Management</a></li>
                     <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
                     <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
                     <li><a id="order" class="active" href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
@@ -141,7 +141,9 @@
                     <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
                 </ul>
             </nav>
-            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+            <form action="/admin/logout" method="POST">
+              <button type="submit" class="logout">Log Out</button>
+            </form>
         </aside>
         <main class="main-content">
                 <header class="header">
@@ -153,7 +155,6 @@
                     <table>
                         <thead>
                             <tr>
-                              <!-- <th>NO.</th> -->
                               <th>Order ID</th>
                               <th>Username</th>
                               <th>Product Name</th>
@@ -171,7 +172,6 @@
                             <% order.forEach((order, index) => { %>
                               <% order.items.forEach(item => { %>
                                 <tr>
-                                  <!-- <td><%= (currentPage - 1) * itemsPerPage + index + 1 %></td> -->
                                   <td><%= order._id %></td>
                                   <td><%= order.deliveryAddress.name %></td>
                                   <td><%= item.productName %></td>
@@ -224,7 +224,7 @@
                           <button id="acceptReturn">Accept</button>
                           <button id="rejectReturn">Reject</button>
                         </div>
-                      </div>
+                    </div>
                 </div>                
                 <div class="pagination">
                     <!-- Previous Arrow -->
@@ -255,62 +255,10 @@
 
     <script>
 
-        // update order status
-        document.querySelectorAll('.status-select').forEach(select => {
-          select.addEventListener('change', async function() {
-            const orderId = this.getAttribute('order_id');
-            const productId = this.getAttribute('product_id');
-            const status = this.value;
+        const modal = document.getElementById('returnRequestModal');
+        const returnReasonText = document.getElementById('returnReasonText');
 
-            try {
-              const response = await fetch(`/admin/updateOrderStatus/${orderId}/${productId}`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ status })
-              });
-
-              const result = await response.json();
-              if (result.success) {
-                window.location.reload();
-              } else {
-                console.error(result.message);
-              }
-            } catch (error) {
-              console.error('Error:', error);
-            }
-          });
-        });
-
-        // Modal Logic
-        const modal = document.getElementById("returnRequestModal");
-        const returnReasonText = document.getElementById("returnReasonText");
-
-        document.querySelectorAll('.return-request-btn').forEach(button => {
-          button.addEventListener('click', function() {
-            const returnReason = this.getAttribute('data-return-reason');
-            returnReasonText.textContent = returnReason;
-            modal.style.display = "block";
-
-            const orderId = this.closest('tr').querySelector('.status-select').getAttribute('order_id');
-            const productId = this.closest('tr').querySelector('.status-select').getAttribute('product_id');
-
-            document.getElementById('acceptReturn').onclick = async function() {
-              await updateOrderStatus(orderId, productId, 'Returned');
-            };
-
-            document.getElementById('rejectReturn').onclick = async function() {
-              await updateOrderStatus(orderId, productId, 'Delivered');
-            };
-          });
-        });
-
-        // Close modal
-        document.querySelector(".close-button").onclick = function() {
-          modal.style.display = "none";
-        };
-
+        // Function to update order status
         async function updateOrderStatus(orderId, productId, status) {
           try {
             const response = await fetch(`/admin/updateOrderStatus/${orderId}/${productId}`, {
@@ -332,6 +280,44 @@
           }
         }
 
+        // Dropdown for status change
+        document.querySelectorAll('.status-select').forEach(select => {
+          select.addEventListener('change', function() {
+            const orderId = this.getAttribute('order_id');
+            const productId = this.getAttribute('product_id');
+            const status = this.value;
+
+            updateOrderStatus(orderId, productId, status);
+          });
+        });
+
+        // Modal Logic for Return Request
+        document.querySelectorAll('.return-request-btn').forEach(button => {
+          button.addEventListener('click', function() {
+            const returnReason = this.getAttribute('data-return-reason');
+            returnReasonText.textContent = returnReason;
+            modal.style.display = "block";
+
+            const orderId = this.closest('tr').querySelector('.status-select').getAttribute('order_id');
+            const productId = this.closest('tr').querySelector('.status-select').getAttribute('product_id');
+
+            document.getElementById('acceptReturn').onclick = async function() {
+              await updateOrderStatus(orderId, productId, 'Returned');
+              modal.style.display = "none";
+            };
+
+            document.getElementById('rejectReturn').onclick = async function() {
+              await updateOrderStatus(orderId, productId, 'Delivered');
+              modal.style.display = "none";
+            };
+          });
+        });
+
+        // Close modal
+        document.querySelector(".close-button").onclick = function() {
+          modal.style.display = "none";
+        };
+        
     </script>
 
 </body>

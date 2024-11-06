@@ -18,17 +18,6 @@ const razorpayInstance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-const orderplaced = async (req, res) => {
-  try {
-    res.render("user/order_placed", {
-      user: req.user,
-      isLoggedIn: true,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const userorders = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -322,10 +311,6 @@ const returnOrder = async (req, res) => {
       });
     }
 
-    await productDB.findByIdAndUpdate(item.productId._id, {
-      $inc: { stock: item.quantity },
-    });
-
     item.status = "Processing";
     order.paymentStatus = "Processing";
     item.returnReason = returnReason;
@@ -493,7 +478,6 @@ const paymentSuccess = async (req, res) => {
 };
 
 module.exports = {
-  orderplaced,
   userorders,
   orderDetails,
   downloadInvoice,

@@ -84,7 +84,7 @@
             <nav class="nav">
                 <ul>
                     <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                    <li><a id="user" class="active" href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a id="user" class="active" href="/admin/users"><i class="fas fa-users"></i> User Management</a></li>
                     <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
                     <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
                     <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
@@ -93,7 +93,9 @@
                     <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
                 </ul>
             </nav>
-            <a href="/admin/logout"><button class="logout">Log Out</button></a>
+            <form action="/admin/logout" method="POST">
+                <button type="submit" class="logout">Log Out</button>
+            </form>
         </aside>
         <main class="main-content">
             <header class="header">
@@ -120,13 +122,9 @@
                                 <td><%= user.email %></td>
                                 <td>
                                     <% if (user.isBlocked) { %>
-                                        <form action="/admin/unblockuser/<%= user._id %>" method="POST">
-                                            <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
-                                        </form>
+                                        <button onclick="updateUserStatus('<%= user._id %>', 'unblock')" id="unblock" class="action-btn unblock">Unblock</button>
                                     <% } else { %>
-                                        <form action="/admin/blockuser/<%= user._id %>" method="POST">
-                                            <button type="submit" id="block" class="action-btn block">Block</button>
-                                        </form>
+                                        <button onclick="updateUserStatus('<%= user._id %>', 'block')" id="block" class="action-btn block">Block</button>
                                     <% } %>
                                 </td>
                             </tr>
@@ -160,5 +158,25 @@
             
         </main>
     </div>
+
+    <script>
+
+        // update user status
+        function updateUserStatus(userId, action) {
+            fetch(`/admin/users/${userId}/${action}`, {
+                method: 'PATCH',
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.log('Failed to update user status');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+    </script>
+
 </body>
 </html>
