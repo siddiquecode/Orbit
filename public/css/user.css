@@ -191,8 +191,12 @@ body {
   #navbar li{
     padding: 0 17px;
   }
+<<<<<<< HEAD
 
   /* .slide .item:nth-child(3){
+=======
+  .slide .item:nth-child(3){
+>>>>>>> 36d0a07 (ui)
     left: 57%;
   }
   .container .slide .item{
@@ -204,8 +208,12 @@ body {
   }
   .slide .item:nth-child(5){
     left: calc(52% + 390px);
+<<<<<<< HEAD
   } */
 
+=======
+  }
+>>>>>>> 36d0a07 (ui)
 }
 
 
