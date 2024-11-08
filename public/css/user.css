@@ -191,6 +191,19 @@ body {
   #navbar li{
     padding: 0 17px;
   }
+  .slide .item:nth-child(3){
+    left: 57%;
+  }
+  .container .slide .item{
+    width: 150px;
+    height: 250px;
+  }
+  .slide .item:nth-child(4){
+    left: calc(53% + 215px);
+  }
+  .slide .item:nth-child(5){
+    left: calc(52% + 390px);
+  }
 }
 
 
