@@ -251,7 +251,7 @@
             <nav class="nav">
                 <ul>
                     <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                    <li><a href="/admin/users"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
                     <li><a id="product" class="active" href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
                     <li><a href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
                     <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
@@ -260,9 +260,7 @@
                     <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
                 </ul>
             </nav>
-            <form action="/admin/logout" method="POST">
-                <button type="submit" class="logout">Log Out</button>
-            </form>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
         </aside>
         <main class="main-content">
             <header class="header">
@@ -304,18 +302,17 @@
                             </td>
                             <td>
                                 <button class="edit-product" id="editProductBtn" style="margin-bottom: 5px;">Edit</button>
-                                    <!-- <form action="/admin/deleteproduct/<%= product._id %>" method="post">
-                                        <button type="submit" id="delete" class="action-btn delete">Delete</button>
-                                    </form> -->
-                                    <% if (product.isBlocked) { %>
-                                        <form action="/admin/unblockproduct/<%= product._id %>" method="POST">
-                                            <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
-                                        </form>
-                                    <% } else { %>
-                                        <form action="/admin/blockproduct/<%= product._id %>" method="POST">
-                                            <button type="submit" id="block" class="action-btn block">Soft delete</button>
-                                        </form>
-                                    <% } %>
+
+                                <% if (product.isBlocked) { %>
+                                    <form action="/admin/unblockproduct/<%= product._id %>" method="POST">
+                                        <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
+                                    </form>
+                                <% } else { %>
+                                    <form action="/admin/blockproduct/<%= product._id %>" method="POST">
+                                        <button type="submit" id="block" class="action-btn block">Soft delete</button>
+                                    </form>
+                                <% } %>
+                                
                             </td>
                         </tr>
                         <% }) %>

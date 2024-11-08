@@ -140,10 +140,10 @@ const blockcategory = async (req, res) => {
     const categoryId = req.params.id;
     await categoryDB.findByIdAndUpdate(categoryId, { isBlocked: true });
     await productDB.updateMany({ category: categoryId }, { isBlocked: true });
-    res.status(200).json({ message: "Category blocked successfully" });
+    res.redirect("/admin/getcategory");
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed to unblock category" });
+    res.status(500).send("Internal Server error");
   }
 };
 
@@ -152,10 +152,10 @@ const unblockcategory = async (req, res) => {
     const categoryId = req.params.id;
     await categoryDB.findByIdAndUpdate(categoryId, { isBlocked: false });
     await productDB.updateMany({ category: categoryId }, { isBlocked: false });
-    res.status(200).json({ message: "Category unblocked successfully" });
+    res.redirect("/admin/getcategory");
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Failed to unblock category" });
+    res.status(500).send("Internal Server error");
   }
 };
 

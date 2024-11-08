@@ -171,22 +171,10 @@ const unblockproduct = async (req, res) => {
   }
 };
 
-const deleteproduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    await productDB.findByIdAndDelete(productId);
-    res.redirect("/admin/getproduct");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Server error");
-  }
-};
-
 module.exports = {
   getproduct,
   addproduct,
   editproduct,
   blockproduct,
   unblockproduct,
-  deleteproduct,
 };

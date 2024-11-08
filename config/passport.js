@@ -1,6 +1,8 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const userDB = require("../models/user");
+const WalletDB = require("../models/wallet");
+const wishlistDB = require("../models/wishlist");
 
 const generateReferralCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -38,6 +40,20 @@ passport.use(
           });
 
           user = await newUser.save();
+
+          const wallet = new WalletDB({
+            user: user._id,
+            balance: 0,
+            transactions: [],
+          });
+          await wallet.save();
+
+          const wishlist = new wishlistDB({
+            user: user._id,
+            items: [],
+          });
+          await wishlist.save();
+
           return done(null, user);
         }
       } catch (err) {

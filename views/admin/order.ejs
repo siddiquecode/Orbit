@@ -216,6 +216,7 @@
                           </tbody>
                     </table>
 
+                    <!-- return request modal -->
                     <div id="returnRequestModal" class="modal">
                         <div class="modal-content">
                           <span class="close-button">&times;</span>
@@ -225,6 +226,7 @@
                           <button id="rejectReturn">Reject</button>
                         </div>
                     </div>
+
                 </div>                
                 <div class="pagination">
                     <!-- Previous Arrow -->
@@ -262,7 +264,7 @@
         async function updateOrderStatus(orderId, productId, status) {
           try {
             const response = await fetch(`/admin/updateOrderStatus/${orderId}/${productId}`, {
-              method: 'POST',
+              method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json'
               },

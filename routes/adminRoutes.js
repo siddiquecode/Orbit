@@ -58,7 +58,7 @@ adminRouter.post(
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 1),
   categoryController.addcategory
 );
-adminRouter.post(
+adminRouter.put(
   "/editcategory/:id",
   multer({ storage: fileStorage, fileFilter: fileFilter }).array(
     "categoryImage",
@@ -66,11 +66,8 @@ adminRouter.post(
   ),
   categoryController.editcategory
 );
-adminRouter.patch("/categories/:id/block", categoryController.blockcategory);
-adminRouter.patch(
-  "/categories/:id/unblock",
-  categoryController.unblockcategory
-);
+adminRouter.post("/blockcategory/:id", categoryController.blockcategory);
+adminRouter.post("/unblockcategory/:id", categoryController.unblockcategory);
 
 // .................... product
 adminRouter.get(
@@ -93,7 +90,6 @@ adminRouter.put(
 );
 adminRouter.post("/blockproduct/:id", productController.blockproduct);
 adminRouter.post("/unblockproduct/:id", productController.unblockproduct);
-adminRouter.post("/deleteproduct/:id", productController.deleteproduct);
 
 // .................... coupon
 adminRouter.get("/getcoupon", adminAuthenticated, couponController.getcoupon);
@@ -108,12 +104,12 @@ adminRouter.get(
   adminAuthenticated,
   couponController.get_editcoupon
 );
-adminRouter.post(
+adminRouter.put(
   "/editcoupon/:id",
   adminAuthenticated,
   couponController.editcoupon
 );
-adminRouter.get(
+adminRouter.delete(
   "/deletecoupon/:id",
   adminAuthenticated,
   couponController.deletecoupon
@@ -121,7 +117,7 @@ adminRouter.get(
 
 // .................... order
 adminRouter.get("/getorder", adminAuthenticated, orderController.getorder);
-adminRouter.post(
+adminRouter.patch(
   "/updateOrderStatus/:orderId/:productId",
   orderController.update_OrderStatus
 );
@@ -149,12 +145,12 @@ adminRouter.get(
   adminAuthenticated,
   offerController.editoffer_get
 );
-adminRouter.post(
+adminRouter.put(
   "/editoffer/:id",
   adminAuthenticated,
   offerController.editoffer
 );
-adminRouter.get(
+adminRouter.delete(
   "/deleteoffer/:id",
   adminAuthenticated,
   offerController.deleteoffer

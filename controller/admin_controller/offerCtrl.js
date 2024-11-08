@@ -132,9 +132,9 @@ const editoffer = async (req, res) => {
       _id: { $ne: offerId },
     });
 
-    if(existingOffer){
-      req.flash('error','This offer already exists for the selected name.')
-      return res.redirect(`/admin/editoffer/${offerId}`)
+    if (existingOffer) {
+      req.flash("error", "This offer already exists for the selected name.");
+      return res.redirect(`/admin/editoffer/${offerId}`);
     }
 
     await offerDB.findByIdAndUpdate(
@@ -165,16 +165,16 @@ const editoffer = async (req, res) => {
       }
     }
 
-    res.redirect("/admin/getoffer");
+    res.json({ success: true, message: "Offer updated successfully" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ success: false, message: "An error occurred" });
   }
 };
 
 const deleteoffer = async (req, res) => {
   try {
     const offerId = req.params.id;
-
     const offer = await offerDB.findById(offerId);
 
     if (!offer) {
@@ -188,10 +188,10 @@ const deleteoffer = async (req, res) => {
     }
 
     await offerDB.findByIdAndDelete(offerId);
-
-    res.redirect("/admin/getoffer");
+    res.json({ success: true, message: "Offer deleted successfully" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ success: false, message: "An error occurred" });
   }
 };
 

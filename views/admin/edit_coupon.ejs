@@ -139,41 +139,62 @@
                 <div class="coupon-modal">
                     <span class="close-modal" onclick="window.location.href='/admin/getcoupon';">&times;</span>
                     <h2>Edit Coupon</h2>
-                    <form action="/admin/editcoupon/<%= coupon._id %>" method="POST">
+                    <form id="editCouponForm" action="/admin/editcoupon/<%= coupon._id %>" method="POST">
                         <div class="form-group">
-                            <label for="couponCode">Coupon Code</label>
-                            <input type="text" id="couponCode" name="couponCode" value="<%= coupon.couponCode %>" required>
+                          <label for="couponCode">Coupon Code</label>
+                          <input type="text" id="couponCode" name="couponCode" value="<%= coupon.couponCode %>" required>
                         </div>
                         <div class="form-group">
-                            <label for="discount">Discount (%)</label>
-                            <input type="number" id="discount" name="discount" value="<%= coupon.discount %>" required>
+                          <label for="discount">Discount (%)</label>
+                          <input type="number" id="discount" name="discount" value="<%= coupon.discount %>" required>
                         </div>
                         <div class="form-group">
-                            <label for="minimumAmount">Minimum Amount</label>
-                            <input type="number" id="minimumAmount" name="minimumAmount" value="<%= coupon.minimumAmount %>" required>
+                          <label for="minimumAmount">Minimum Amount</label>
+                          <input type="number" id="minimumAmount" name="minimumAmount" value="<%= coupon.minimumAmount %>" required>
                         </div>
                         <div class="form-group">
-                            <label for="maximumAmount">Maximum Amount</label>
-                            <input type="number" id="maximumAmount" name="maximumAmount" value="<%= coupon.maximumAmount %>" required>
+                          <label for="maximumAmount">Maximum Amount</label>
+                          <input type="number" id="maximumAmount" name="maximumAmount" value="<%= coupon.maximumAmount %>" required>
                         </div>
-                        <!-- <div class="form-group">
-                            <label for="startDate">Start Date</label>
-                            <input type="date" id="startDate" name="startDate" required>
-                        </div> -->
                         <div class="form-group">
-                            <label for="expireDate">Expiration Date</label>
-                            <input type="date" id="expireDate" name="expireDate" value="<%= coupon.expireDate.toISOString().split('T')[0] %>" required>
+                          <label for="expireDate">Expiration Date</label>
+                          <input type="date" id="expireDate" name="expireDate" value="<%= coupon.expireDate.toISOString().split('T')[0] %>" required>
                         </div>
-
+                      
                         <div class="form-actions">
-                            <input id="Cancel_btn" type="button" value="Cancel" onclick="window.location.href='/admin/getcoupon';">
-                            <input id="save_btn" type="submit" value="Update">
+                          <input id="Cancel_btn" type="button" value="Cancel" onclick="window.location.href='/admin/getcoupon';">
+                          <input id="save_btn" type="submit" value="Update">
                         </div>
                     </form>
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+
+        // edit coupon 
+        document.getElementById('editCouponForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            
+            fetch("/admin/editcoupon/<%= coupon._id %>", {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/admin/getcoupon';
+                } else {
+                    console.log('Failed to update coupon');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        
+    </script>
 
 </body>
 </html>

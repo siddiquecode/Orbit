@@ -246,7 +246,7 @@
             <nav class="nav">
                 <ul>
                     <li><a href="/admin/getdashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
-                    <li><a href="/admin/users"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="/admin/getuser"><i class="fas fa-users"></i> User Management</a></li>
                     <li><a href="/admin/getproduct"><i class="fas fa-box"></i> Product Management</a></li>
                     <li><a id="category" class="active" href="/admin/getcategory"><i class="fa-solid fa-list"></i> Category Management</a></li>
                     <li><a href="/admin/getorder"><i class="fas fa-shopping-cart"></i> Order Management</a></li>
@@ -255,9 +255,7 @@
                     <li><a href="/admin/getreport"><i class="fas fa-chart-bar"></i>Sales Report</a></li>
                 </ul>
             </nav>
-            <form action="/admin/logout" method="POST">
-                <button type="submit" class="logout">Log Out</button>
-            </form>
+            <a href="/admin/logout"><button class="logout">Log Out</button></a>
         </aside>
         <main class="main-content">
             <header class="header">
@@ -293,10 +291,15 @@
                             <button class="edit-category" id="editCategoryBtn" style="margin-bottom: 5px;">Edit</button>
 
                             <% if (category.isBlocked) { %>
-                                <button id="unblock" class="action-btn unblock" onclick="handleCategoryAction('<%= category._id %>', 'unblock')">Unblock</button>
+                                <form action="/admin/unblockcategory/<%= category._id %>" method="POST">
+                                    <button type="submit" id="unblock" class="action-btn unblock">Unblock</button>
+                                </form>
                             <% } else { %>
-                                <button id="block" class="action-btn block" onclick="handleCategoryAction('<%= category._id %>', 'block')">Soft delete</button>
+                                <form action="/admin/blockcategory/<%= category._id %>" method="POST">
+                                    <button type="submit" id="block" class="action-btn block">Soft delete</button>
+                                </form>
                             <% } %>
+                            
                           </td>
                         </tr>
                         <% }) %>
@@ -406,24 +409,6 @@
 
     <script>
 
-        // block and unblock category
-        async function handleCategoryAction(categoryId, action) {
-            try {
-                const response = await fetch(`/admin/categories/${categoryId}/${action}`, {
-                method: 'PATCH',
-                });
-
-                if (response.ok) {
-                location.reload();
-                } else {
-                console.log('Failed to update category status:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            
-        }
-
         /*-------------------------------- Add category-------------------------------- */
 
         // Add category modal logic
@@ -489,94 +474,94 @@
 
         // Handle add category form submission
         addCategoryForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            let form = event.target;
-            let formData = new FormData(form);
+        event.preventDefault();
+        let form = event.target;
+        let formData = new FormData(form);
 
-            const categoryName = formData.get('categoryName');
-            const description = formData.get('description');
-            const discount = formData.get('discount');
-            const imageFiles = formData.getAll('image');
-            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jfif'];
+        const categoryName = formData.get('categoryName');
+        const description = formData.get('description');
+        const discount = formData.get('discount');
+        const imageFiles = formData.getAll('image');
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jfif'];
 
-            let error = false;
+        let error = false;
 
-            function setError(elementId, message) {
-                const element = document.getElementById(elementId);
-                element.innerText = message;
-                element.style.display = 'block';
-                setTimeout(() => {
-                    element.style.display = 'none';
-                }, 4500);
-            }
+        function setError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerText = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 4500);
+        }
 
-            document.getElementById('categoryNameError').innerText = '';
-            document.getElementById('descriptionError').innerText = '';
-            document.getElementById('discountError').innerText = '';
-            document.getElementById('imageError').innerText = '';
+        document.getElementById('categoryNameError').innerText = '';
+        document.getElementById('descriptionError').innerText = '';
+        document.getElementById('discountError').innerText = '';
+        document.getElementById('imageError').innerText = '';
 
-            if (!categoryName || !categoryName.trim()) {
+        if (!categoryName || !categoryName.trim()) {
+            error = true;
+            setError('categoryNameError', 'Please enter a valid category name without spaces before and after');
+        } else if (!description || !description.trim()) {
+            error = true;
+            setError('descriptionError', 'Description cannot be empty or contain only spaces');
+        } else if (discount === null || discount < 0 || discount > 100) {
+            error = true;
+            setError('discountError', 'Please enter a valid discount between 0 and 100');
+        } else if (!imageFiles || imageFiles.length === 0) {
+            error = true;
+            setError('imageError', 'Please select an image');
+        } else {
+            const invalidImage= Array.from(imageFiles).find(file=> !validImageTypes.includes(file.type));
+            if(invalidImage){
                 error = true;
-                setError('categoryNameError', 'Please enter a valid category name without spaces before and after');
-            } else if (!description || !description.trim()) {
-                error = true;
-                setError('descriptionError', 'Description cannot be empty or contain only spaces');
-            } else if (discount === null || discount < 0 || discount > 100) {
-                error = true;
-                setError('discountError', 'Please enter a valid discount between 0 and 100');
-            } else if (!imageFiles || imageFiles.length === 0) {
-                error = true;
-                setError('imageError', 'Please select an image');
-            } else {
-                const invalidImage= Array.from(imageFiles).find(file=> !validImageTypes.includes(file.type));
-                if(invalidImage){
-                    error = true;
-                    setError('imageError', 'Please upload a valid image (JPEG, PNG, JPG, JFIF)');
-                }
-            }
-
-            if (!error) {
-                try {
-                    const response = await fetch('/admin/addcategory', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (result.error) {
-                        displayError(result.error);
-                    } else if (result.success) {
-                        modal.style.display = 'none';
-                        location.reload();
-                    }
-                } catch (error) {
-                    console.log("Error:", error);
-                }
-            }
-        });
-
-        function displayError(errorMessage){
-            const errorElements = {
-                categoryName: document.getElementById('categoryNameError'),
-                description: document.getElementById('descriptionError'),
-                discount: document.getElementById('discountError'),
-                image: document.getElementById('imageError')
-            };
-
-            // Clear previous errors
-            Object.values(errorElements).forEach(el => el.textContent = "");
-
-            if (errorMessage.includes('category name') || errorMessage.includes('already added')) {
-                errorElements.categoryName.textContent = errorMessage;
-            } else if (errorMessage.includes('description')) {
-                errorElements.description.textContent = errorMessage;
-            }else if(errorMessage.includes('discount')){
-                errorElements.discount.textContent = errorMessage;
-            } else if (errorMessage.includes('image')) {
-                errorElements.image.textContent = errorMessage;
+                setError('imageError', 'Please upload a valid image (JPEG, PNG, JPG, JFIF)');
             }
         }
+
+        if (!error) {
+            try {
+                const response = await fetch('/admin/addcategory', {
+                    method: 'PUT',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.error) {
+                    displayError(result.error);
+                } else if (result.success) {
+                    modal.style.display = 'none';
+                    location.reload();
+                }
+            } catch (error) {
+                console.log("Error:", error);
+            }
+        }
+    });
+
+    function displayError(errorMessage){
+        const errorElements = {
+            categoryName: document.getElementById('categoryNameError'),
+            description: document.getElementById('descriptionError'),
+            discount: document.getElementById('discountError'),
+            image: document.getElementById('imageError')
+        };
+
+        // Clear previous errors
+        Object.values(errorElements).forEach(el => el.textContent = "");
+
+        if (errorMessage.includes('category name') || errorMessage.includes('already added')) {
+            errorElements.categoryName.textContent = errorMessage;
+        } else if (errorMessage.includes('description')) {
+            errorElements.description.textContent = errorMessage;
+        }else if(errorMessage.includes('discount')){
+            errorElements.discount.textContent = errorMessage;
+        } else if (errorMessage.includes('image')) {
+            errorElements.image.textContent = errorMessage;
+        }
+    }
 
 
 
@@ -636,19 +621,19 @@
 
         // Save the cropped image
         saveCroppedImageBtn.onclick = function () {
-            const canvas = cropper.getCroppedCanvas();
-            canvas.toBlob(function (blob) {
-                const url = URL.createObjectURL(blob);
-                currentImagePreview.src = url;
-                const croppedFile = new File([blob], 'cropped-image.png', { type: 'image/png' });
-                const dt = new DataTransfer();
-                dt.items.add(croppedFile);
-                currentFileInput.files = dt.files;
-                imageCropModal.style.display = 'none';
-                cropper.destroy();
-                cropper = null;
-            });
-        };
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+            const url = URL.createObjectURL(blob);
+            currentImagePreview.src = url;
+            const croppedFile = new File([blob], 'cropped-image.png', { type: 'image/png' });
+            const dt = new DataTransfer();
+            dt.items.add(croppedFile);
+            currentFileInput.files = dt.files;
+            imageCropModal.style.display = 'none';
+            cropper.destroy();
+            cropper = null;
+        });
+    };
 
 
         /* --------------------------Edit category-------------------------- */
@@ -749,74 +734,74 @@
 
         // Handle edit category form submission
         editCategoryForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            let form = event.target;
-            const formData = new FormData(form);
-            const categoryId = document.getElementById('editCategoryId').value;
+        event.preventDefault();
+        let form = event.target;
+        const formData = new FormData(form);
+        const categoryId = document.getElementById('editCategoryId').value;
 
-            const editCategoryName = formData.get('categoryName');
-            const editDescription = formData.get('description');
-            const editDiscount = formData.get('discount');
-            const imageFiles = formData.getAll('categoryImage');
-            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jfif'];
+        const editCategoryName = formData.get('categoryName');
+        const editDescription = formData.get('description');
+        const editDiscount = formData.get('discount');
+        const imageFiles = formData.getAll('categoryImage');
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/jfif'];
 
-            let error = false;
+        let error = false;
 
-            function setError(elementId, message) {
-                const element = document.getElementById(elementId);
-                element.innerText = message;
-                element.style.display = 'block';
-                setTimeout(() => {
-                    element.style.display = 'none';
-                }, 4500);
+        function setError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerText = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 4500);
+        }
+
+        document.getElementById('editcategoryNameError').innerText = '';
+        document.getElementById('editdescriptionError').innerText = '';
+        document.getElementById('editDiscountError').innerText = '';
+        document.getElementById('editimageError').innerText = '';
+
+        if (!editCategoryName || !editCategoryName.trim()) {
+            error = true;
+            setError('editcategoryNameError', 'Please enter a valid category name without spaces before and after');
+        } else if (!editDescription || !editDescription.trim()) {
+            error = true;
+            setError('editdescriptionError', 'Description cannot be empty or contain only spaces');
+        } else if (!editDiscount || editDiscount < 0 || editDiscount > 100) {
+            error = true;
+            setError('editDiscountError', 'Please enter a valid discount between 0 and 100');
+        } else if (imageFiles.length === 0) {
+            error = true;
+            setError('editimageError', 'Please select an image');
+        } else {
+            const invalidImage = Array.from(imageFiles).find(file => !validImageTypes.includes(file.type));
+            if (invalidImage) {
+                error = true;
+                setError('editimageError', 'Please upload a valid image (JPEG, PNG, JPG, JFIF)');
             }
+        }
 
-            document.getElementById('editcategoryNameError').innerText = '';
-            document.getElementById('editdescriptionError').innerText = '';
-            document.getElementById('editDiscountError').innerText = '';
-            document.getElementById('editimageError').innerText = '';
+        if (!error) {
+            try {
+                const response = await fetch(`/admin/editcategory/${categoryId}`, {
+                    method: 'POST',
+                    body: formData
+                });
 
-            if (!editCategoryName || !editCategoryName.trim()) {
-                error = true;
-                setError('editcategoryNameError', 'Please enter a valid category name without spaces before and after');
-            } else if (!editDescription || !editDescription.trim()) {
-                error = true;
-                setError('editdescriptionError', 'Description cannot be empty or contain only spaces');
-            } else if (!editDiscount || editDiscount < 0 || editDiscount > 100) {
-                error = true;
-                setError('editDiscountError', 'Please enter a valid discount between 0 and 100');
-            } else if (imageFiles.length === 0) {
-                error = true;
-                setError('editimageError', 'Please select an image');
-            } else {
-                const invalidImage = Array.from(imageFiles).find(file => !validImageTypes.includes(file.type));
-                if (invalidImage) {
-                    error = true;
-                    setError('editimageError', 'Please upload a valid image (JPEG, PNG, JPG, JFIF)');
+                if (response.ok) {
+                    const result = await response.json();
+                    editCategoryModal.style.display = 'none';
+                    location.reload();
+                } else {
+                    console.error('Error updating category');
+                    const result = await response.json();
+                    console.error(result.message);
                 }
+            } catch (error) {
+                console.error('Error:', error);
             }
-
-            if (!error) {
-                try {
-                    const response = await fetch(`/admin/editcategory/${categoryId}`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (response.ok) {
-                        const result = await response.json();
-                        editCategoryModal.style.display = 'none';
-                        location.reload();
-                    } else {
-                        console.error('Error updating category');
-                        const result = await response.json();
-                        console.error(result.message);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            }
-        });
+        }
+    });
 
 
 

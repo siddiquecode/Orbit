@@ -87,12 +87,11 @@ const editcoupon = async (req, res) => {
 const deletecoupon = async (req, res) => {
   try {
     const couponId = req.params.id;
-
     const deletedCoupon = await couponDB.findByIdAndDelete(couponId);
-
-    res.redirect("/admin/getcoupon");
+    res.status(200).json({ message: "Coupon deleted successfully" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Failed to delete coupon" });
   }
 };
 

@@ -186,12 +186,21 @@ body {
     transform: translateX(-30px);
   }
   #navbar{
-    transform: translateX(-30px);
+    transform: translateX(-40px);
   }
   #navbar li{
     padding: 0 17px;
   }
+
+  /* .slide .item:nth-child(5){
+    left: calc(25% + 440px);
+  }
+  #prod .prod-arrow{
+    left: 450px;
+  } */
+
 }
+
 /* <--------------------home page--------------------> */
 
 .container{

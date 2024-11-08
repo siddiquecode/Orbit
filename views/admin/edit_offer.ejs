@@ -143,7 +143,7 @@
                 <div class="offer-modal">
                     <span class="close-modal" onclick="window.location.href='/admin/getoffer';">&times;</span>
                     <h2>Edit Offer</h2>
-                    <form action="/admin/editoffer/<%= offer._id %>" method="POST">
+                    <form action="/admin/editoffer/<%= offer._id %>" method="POST" id="editOfferForm">
                         <div class="form-group">
                           <label for="offerType">Offer Type</label>
                           <select id="offerType" name="offerType" onchange="populateNameField()" required>
@@ -180,7 +180,8 @@
     </div>
 
     <script>
-        // select name dropdown
+
+        // select name field dropdown
         async function populateNameField() {
           const offerType = document.getElementById("offerType").value;
           const nameSelect = document.getElementById("name");
@@ -203,6 +204,32 @@
             }
           }
         }
+    
+        // edit offer
+        document.getElementById('editOfferForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const offerId = "<%= offer._id %>";
+            const formData = new FormData(this);
+
+            fetch(`/admin/editoffer/${offerId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData.entries()))
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    window.location.href = '/admin/getoffer';
+                } else {
+                    console.log('Failed to update offer');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
     </script>
     
 </body>

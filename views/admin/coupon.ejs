@@ -147,7 +147,7 @@
                                             <button class="edit-coupon" id="editCouponBtn" style="margin-bottom: 5px;">Edit</button>
                                         </a>
                                         <a href="#">
-                                            <button class="delete-coupon" data-url="/admin/deletecoupon/<%= coupon._id %>" id="deleteBtn" style="margin-bottom: 5px;">Delete</button>
+                                            <button class="delete-coupon" data-url="/admin/deletecoupon/<%= coupon._id %>" style="margin-bottom: 5px;">Delete</button>
                                         </a>
                                     </td>
                                 </tr>
@@ -182,17 +182,30 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            title: 'Deleted!',
-                            text: 'Coupon has been deleted.',
-                            icon: 'success',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
+                        fetch(deleteUrl, {
+                            method: 'DELETE',
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Coupon has been deleted.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
 
-                        setTimeout(() => {
-                            window.location.href = deleteUrl;
-                        }, 3000);
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                Swal.fire('Error', 'Failed to delete coupon.', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Error', 'An error occurred.', 'error');
+                        });
                     }
                 });
             });
