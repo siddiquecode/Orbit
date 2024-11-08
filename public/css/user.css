@@ -191,7 +191,8 @@ body {
   #navbar li{
     padding: 0 17px;
   }
-  .slide .item:nth-child(3){
+
+  /* .slide .item:nth-child(3){
     left: 57%;
   }
   .container .slide .item{
@@ -203,7 +204,8 @@ body {
   }
   .slide .item:nth-child(5){
     left: calc(52% + 390px);
-  }
+  } */
+
 }
 
 

@@ -23,16 +23,19 @@
             overflow: hidden;
         }
     
-        .background-image {
+        .video-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('/images/background.jfif');
-            background-size: cover;
-            background-position: center;
             z-index: -1;
+        }
+    
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     
         .overlay {
@@ -202,7 +205,13 @@
         }
     </style>
     
-    <div class="background-image"></div>
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="https://drive.google.com/uc?export=download&id=1w5gvLtLcsYOXKL8NpjV5f5HH5Y0Tcijv" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+    </div>
     <div class="overlay"></div>
     
     <div class="login-container">

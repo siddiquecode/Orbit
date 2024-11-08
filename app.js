@@ -42,9 +42,9 @@ app.use(passport.session());
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
-/* app.use((req, res) => {
+app.use((req, res) => {
   res.render("user/404");
-}); */
+});
 
 app.listen(3000, () => {
   console.log("http://localhost:3000");
