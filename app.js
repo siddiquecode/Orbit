@@ -47,5 +47,6 @@ app.use((req, res) => {
 });
 
 app.listen(3000, () => {
+  console.log('ORBIT')
   console.log("http://localhost:3000");
 });
