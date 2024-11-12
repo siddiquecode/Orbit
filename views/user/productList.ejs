@@ -147,13 +147,6 @@
   </div>
   <% } %>
 
-    <% if (message) { %>
-      <div class="empty_product">
-        <h4 style="color: #00000052; font-weight: 700; font-size: 20px; margin-top: 30px;"><%= message %></h4>
-        <img src="/images/emptyporduct.png" alt="empty Product">
-      </div>
-      <% } else { %>
-
       <div class="product-box-area">
         <% products.forEach((product) => { %>
         <div
@@ -176,7 +169,6 @@
         </div>
         <% }) %>
       </div>
-    <% } %>
   
 </section>
 

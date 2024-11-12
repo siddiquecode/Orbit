@@ -83,32 +83,10 @@ const searchCategory = async (req, res) => {
     user = await userDB.findOne({ email: req.session.user });
     const searchQuery = req.query.search;
 
-    if (!searchQuery || searchQuery.trim() === "") {
-      return res.redirect("/productlist");
-    }
-
     const categories = await categoryDB.find({
       categoryName: { $regex: `^${searchQuery}`, $options: "i" },
       isBlocked: false,
     });
-
-    if (!categories.length) {
-      return res.render("user/productList", {
-        user,
-        isLoggedIn,
-        pageName: "productList",
-        products: [],
-        categories: [],
-        sort: req.query.sort || "popularity",
-        currentPage: 1,
-        totalPages: 0,
-        showSidebar: false,
-        showPagination: false,
-        message: "No Products found matching your search.",
-        selectedCategoryId: null,
-        searchQuery,
-      });
-    }
 
     const categoryId = categories.map((category) => category._id);
 
@@ -259,8 +237,6 @@ const productlist = async (req, res) => {
       searchQuery,
       showSidebar: totalProducts > 0,
       showPagination,
-      message:
-        totalProducts === 0 ? "No products found in this category" : null,
     });
   } catch (error) {
     console.log(error);
@@ -366,7 +342,6 @@ const categories = async (req, res) => {
       totalPages,
       selectedCategoryId: categoryId,
       sort,
-      message: null,
       showSidebar,
       showPagination,
       searchQuery,

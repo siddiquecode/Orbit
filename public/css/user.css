@@ -170,6 +170,10 @@ body {
 .search-button:hover {
   background-color: #d0d0d0;
 }
+.error-placeholder::placeholder {
+  color: red;
+  font-weight: 700;
+}
 .account{
   border-radius: 25px;
   border: 2px solid;
@@ -191,14 +195,6 @@ body {
   #navbar li{
     padding: 0 17px;
   }
-
-  /* .slide .item:nth-child(5){
-    left: calc(25% + 440px);
-  }
-  #prod .prod-arrow{
-    left: 450px;
-  } */
-
 }
 
 /* <--------------------home page--------------------> */

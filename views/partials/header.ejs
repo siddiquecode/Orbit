@@ -20,13 +20,12 @@
             <div>
                 <ul id="navbar">
                     <li>
-                      <form action="/search" method="po" id="searchForm">
+                      <form action="/search" method="get" id="searchForm">
                         <div class="search-container">
                           <input type="text" name="search" placeholder="Search" class="search-input" id="searchInput"
-                          value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
-                          <i class="fa-solid fa-xmark" id="clearSearch" style="display: none; cursor: pointer;
-                          margin-top: 14px; padding: 1px 3px; height: 20px; width: 20px;"></i>
-                          <button class="search-button"><i class="fas fa-search"></i></button>
+                            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+                          <i class="fa-solid fa-xmark" id="clearSearch" style="display: none; cursor: pointer; margin-top: 14px; padding: 1px 3px; height: 20px; width: 20px;"></i>
+                          <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
                         </div>
                       </form>
                     </li>
@@ -65,14 +64,42 @@
             }
 
             searchInput.addEventListener('input', () => {
-              clearSearch.style.display = searchInput.value ? 'inline' : 'none';
+              clearSearch.style.display = searchInput.value && !searchInput.classList.contains("error-placeholder") ? 'inline' : 'none';
             });
 
             clearSearch.addEventListener('click', () => {
               searchInput.value = '';
               clearSearch.style.display = 'none';
-              window.location.reload();
-              window.location.href = '/productlist';
+              const url = new URL(window.location);
+              url.searchParams.delete('search');
+              window.history.replaceState({}, document.title, url);
+              searchForm.submit();
+            });
+
+            // Search validation
+            searchForm.addEventListener("submit", function(event) {
+              const searchValue = searchInput.value.trim();
+              const isValidSearch = /^[a-zA-Z0-9\s]*$/.test(searchValue);
+
+              if (!searchValue || !isValidSearch || /^\d+$/.test(searchValue)) {
+                event.preventDefault();
+                searchInput.value = "";
+                searchInput.placeholder = "Please enter a valid search term";
+                searchInput.classList.add("error-placeholder");
+
+                clearSearch.style.display = 'none';
+
+                setTimeout(() => {
+                  searchInput.placeholder = "Search";
+                  searchInput.classList.remove("error-placeholder");
+                  clearSearch.style.display = searchInput.value ? 'inline' : 'none';
+                }, 3000);
+              }
+            });
+
+            searchInput.addEventListener("input", function() {
+              this.placeholder = "Search";
+              this.classList.remove("error-placeholder");
             });
           
         </script>
