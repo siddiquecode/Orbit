@@ -30,7 +30,6 @@ router.get(
 // ....................home
 router.get("/", homecontroller.home);
 router.get("/search", homecontroller.searchCategory);
-
 router.get("/productlist/:page?", homecontroller.productlist);
 router.get(
   "/productdetails/:id",

@@ -1,12 +1,4 @@
-const addressDB = require("../../models/address");
-const cartDB = require("../../models/cart");
-const categoryDB = require("../../models/category");
-const couponDB = require("../../models/coupon");
-const orderDB = require("../../models/order");
-const productDB = require("../../models/products");
 const userDB = require("../../models/user");
-const WalletDB = require("../../models/wallet");
-const wishlistDB = require("../../models/wishlist");
 const mailSender = require("../../config/mailer");
 const { totp } = require("otplib");
 const bcrypt = require("bcrypt");
@@ -161,10 +153,6 @@ const resetpasswordPost = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    const updatedUser = await userDB.updateOne(
-      { email: user.email },
-      { $set: { password: hashedPassword } }
-    );
     delete req.session.checkOtp;
     delete req.session.otp;
     req.flash(
