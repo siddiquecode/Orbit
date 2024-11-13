@@ -1,12 +1,5 @@
-const addressDB = require("../../models/address");
-const cartDB = require("../../models/cart");
 const categoryDB = require("../../models/category");
-const couponDB = require("../../models/coupon");
-const orderDB = require("../../models/order");
 const productDB = require("../../models/products");
-const userDB = require("../../models/user");
-const WalletDB = require("../../models/wallet");
-const wishlistDB = require("../../models/wishlist");
 
 const getproduct = async (req, res) => {
   try {
@@ -92,15 +85,6 @@ const addproduct = async (req, res) => {
       (file) => `/uploads/${file.filename}`
     );
 
-    const newProduct = await productDB.create({
-      productName,
-      category,
-      price,
-      stock,
-      description,
-      discount,
-      productImage: productImagePaths,
-    });
 
     res.json({ success: true });
   } catch (error) {

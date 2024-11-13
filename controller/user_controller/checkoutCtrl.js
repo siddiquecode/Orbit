@@ -1,13 +1,8 @@
 const addressDB = require("../../models/address");
 const cartDB = require("../../models/cart");
-const categoryDB = require("../../models/category");
-const couponDB = require("../../models/coupon");
 const orderDB = require("../../models/order");
 const productDB = require("../../models/products");
-const userDB = require("../../models/user");
 const WalletDB = require("../../models/wallet");
-const wishlistDB = require("../../models/wishlist");
-const offerDB = require("../../models/offer");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
@@ -207,7 +202,7 @@ const update_address = async (req, res) => {
 const codController = async (req, res) => {
   try {
     const user = req.user;
-    const { addressId, referralCode } = req.body;
+    const { addressId } = req.body;
 
     const address = await addressDB.findById(addressId);
     if (!address) {

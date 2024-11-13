@@ -1,15 +1,5 @@
 const addressDB = require("../../models/address");
-const cartDB = require("../../models/cart");
-const categoryDB = require("../../models/category");
-const couponDB = require("../../models/coupon");
-const orderDB = require("../../models/order");
-const productDB = require("../../models/products");
-const userDB = require("../../models/user");
-const WalletDB = require("../../models/wallet");
-const wishlistDB = require("../../models/wishlist");
 const { logout } = require("./homeCtrl");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
 
 const useraddress = async (req, res) => {
   try {
@@ -107,7 +97,6 @@ const editaddress = async (req, res) => {
 const delete_address = async (req, res) => {
   try {
     const addressId = req.params.id;
-    const address = await addressDB.findByIdAndDelete(addressId);
 
     res.redirect("/useraddress");
   } catch (error) {

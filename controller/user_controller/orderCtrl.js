@@ -1,17 +1,8 @@
-const addressDB = require("../../models/address");
-const cartDB = require("../../models/cart");
-const categoryDB = require("../../models/category");
-const couponDB = require("../../models/coupon");
 const orderDB = require("../../models/order");
 const productDB = require("../../models/products");
-const userDB = require("../../models/user");
 const WalletDB = require("../../models/wallet");
-const wishlistDB = require("../../models/wishlist");
-const PDFdocument = require("pdfkit");
 const pdf = require("html-pdf");
-const fs = require("fs");
 const Razorpay = require("razorpay");
-const crypto = require("crypto");
 
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -457,7 +448,7 @@ const retryPayment = async (req, res) => {
 
 const paymentSuccess = async (req, res) => {
   try {
-    const { orderId, paymentId } = req.body;
+    const { orderId } = req.body;
     const order = await orderDB.findByIdAndUpdate(
       orderId,
       { paymentStatus: "Completed" },

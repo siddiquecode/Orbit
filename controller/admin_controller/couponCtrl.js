@@ -1,12 +1,4 @@
-const addressDB = require("../../models/address");
-const cartDB = require("../../models/cart");
-const categoryDB = require("../../models/category");
 const couponDB = require("../../models/coupon");
-const orderDB = require("../../models/order");
-const productDB = require("../../models/products");
-const userDB = require("../../models/user");
-const WalletDB = require("../../models/wallet");
-const wishlistDB = require("../../models/wishlist");
 
 const getcoupon = async (req, res) => {
   try {
@@ -66,17 +58,6 @@ const editcoupon = async (req, res) => {
     const { couponCode, discount, minimumAmount, maximumAmount, expireDate } =
       req.body;
 
-    const updatedCoupon = await couponDB.findByIdAndUpdate(
-      couponId,
-      {
-        couponCode,
-        discount,
-        minimumAmount,
-        maximumAmount,
-        expireDate,
-      },
-      { new: true }
-    );
 
     res.redirect("/admin/getcoupon");
   } catch (error) {
@@ -87,7 +68,6 @@ const editcoupon = async (req, res) => {
 const deletecoupon = async (req, res) => {
   try {
     const couponId = req.params.id;
-    const deletedCoupon = await couponDB.findByIdAndDelete(couponId);
     res.status(200).json({ message: "Coupon deleted successfully" });
   } catch (error) {
     console.log(error);
