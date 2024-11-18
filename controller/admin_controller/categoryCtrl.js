@@ -176,7 +176,7 @@ const blockcategory = async (req, res) => {
     await productDB.updateMany({ category: categoryId }, { isBlocked: true });
     res.redirect("/admin/getcategory");
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(500).send("Internal Server error");
   }
 };
