@@ -12,7 +12,7 @@ const getcategory = async (req, res) => {
       .skip((page - 1) * itemsPerPage)
       .limit(itemsPerPage);
 
-    const totalPages = Math.ceil(totalCategories / itemsPerPage);
+    const totalPages = Math.ceil(totalCategories / itemsPerPage)
 
     res.render("admin/categories", {
       category,
