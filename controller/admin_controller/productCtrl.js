@@ -76,7 +76,6 @@ const Addproduct = async (req, res) => {
       (file) => `/uploads/${file.filename}`
     );
 
-
     const newProduct = await productDB.create({
       productName,
       category,
@@ -85,7 +84,6 @@ const Addproduct = async (req, res) => {
       description,
       productImage: productImagePaths,
     });
-
 
     res.redirect("/admin/getproduct");
   } catch (error) {
