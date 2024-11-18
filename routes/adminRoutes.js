@@ -53,18 +53,25 @@ adminRouter.get(
   adminAuthenticated,
   categoryController.getcategory
 );
-adminRouter.post(
-  "/addcategory",
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 1),
-  categoryController.addcategory
+adminRouter.get(
+  "/Addcategory",
+  adminAuthenticated,
+  categoryController.Addcategory_get
 );
-adminRouter.put(
-  "/editcategory/:id",
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array(
-    "categoryImage",
-    1
-  ),
-  categoryController.editcategory
+adminRouter.post(
+  "/Addcategory",
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 1),
+  categoryController.Addcategory
+);
+adminRouter.get(
+  "/Editcategory/:id",
+  adminAuthenticated,
+  categoryController.Editcategory_get
+);
+adminRouter.post(
+  "/Editcategory/:id",
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 1),
+  categoryController.Editcategory
 );
 adminRouter.post("/blockcategory/:id", categoryController.blockcategory);
 adminRouter.post("/unblockcategory/:id", categoryController.unblockcategory);
@@ -75,18 +82,27 @@ adminRouter.get(
   adminAuthenticated,
   productController.getproduct
 );
-adminRouter.post(
-  "/addproduct",
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 3),
-  productController.addproduct
+adminRouter.get(
+  "/Addproduct",
+  adminAuthenticated,
+  productController.Addproduct_get
 );
-adminRouter.put(
-  "/editproduct/:id",
-  multer({ storage: fileStorage, fileFilter: fileFilter }).array(
-    "productImage",
-    3
-  ),
-  productController.editproduct
+adminRouter.post(
+  "/Addproduct",
+  adminAuthenticated,
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 3),
+  productController.Addproduct
+);
+adminRouter.get(
+  "/Editproduct/:id",
+  adminAuthenticated,
+  productController.Editproduct_get
+);
+adminRouter.post(
+  "/Editproduct/:id",
+  adminAuthenticated,
+  multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 3),
+  productController.Editproduct
 );
 adminRouter.post("/blockproduct/:id", productController.blockproduct);
 adminRouter.post("/unblockproduct/:id", productController.unblockproduct);

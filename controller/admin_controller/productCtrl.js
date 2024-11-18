@@ -29,107 +29,150 @@ const getproduct = async (req, res) => {
   }
 };
 
-const addproduct = async (req, res) => {
+const Addproduct_get = async (req, res) => {
   try {
-    const { productName, category, price, stock, description, discount } =
-      req.body;
+    const category = await categoryDB.find();
+    res.render("admin/add_product", {
+      category,
+      errorMessage: req.flash("error"),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching categories");
+  }
+};
+
+const Addproduct = async (req, res) => {
+  try {
+    const { productName, category, price, stock, description } = req.body;
     const productImages = req.files;
 
-    if (!productName || !productName.trim()) {
-      return res.json({ error: "Please enter a valid product name" });
+    if (!productName || productName.trim() === "") {
+      req.flash("error", "Please enter a valid product name.");
+      return res.redirect("/admin/addproduct");
     }
-
-    if (!category) {
-      return res.json({ error: "Please select a category" });
+    if (!category || category === "Select Category") {
+      req.flash("error", "Please select a category.");
+      return res.redirect("/admin/addproduct");
     }
-
     if (!price || price <= 0) {
-      return res.json({ error: "Please enter a valid price" });
+      req.flash("error", "Please enter a valid price.");
+      return res.redirect("/admin/addproduct");
     }
-
     if (!stock || stock <= 0) {
-      return res.json({ error: "Please enter a valid stock amount" });
+      req.flash("error", "Please enter a valid stock amount.");
+      return res.redirect("/admin/addproduct");
     }
-
-    if (!description || !description.trim()) {
-      return res.json({
-        error: "Description cannot be empty or contain only spaces",
-      });
+    if (!description || description.trim() === "") {
+      req.flash("error", "Description cannot be empty or contain only spaces.");
+      return res.redirect("/admin/addproduct");
     }
-
-    if (!discount || discount <= 0 || discount >= 100) {
-      return res.json({ error: "Please enter a valid discount" });
-    }
-
-    const validImageTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/jpg",
-      "image/jfif",
-      "image/webp",
-    ];
     if (!productImages || productImages.length === 0) {
-      return res.json({ error: "Please select an image" });
-    }
-
-    const invalidImage = productImages.find(
-      (img) => !validImageTypes.includes(img.mimetype)
-    );
-    if (invalidImage) {
-      return res.json({
-        error: "Please upload a valid image (JPEG, PNG, JPG , JFIF)",
-      });
+      req.flash("error", "Please select at least one image.");
+      return res.redirect("/admin/addproduct");
     }
 
     const productImagePaths = productImages.map(
       (file) => `/uploads/${file.filename}`
     );
 
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
-
-const editproduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const { productName, category, price, stock, description, discount } =
-      req.body;
-
-    let updateData = {
+    const newProduct = await productDB.create({
       productName,
       category,
       price,
       stock,
       description,
-      discount,
-    };
+      productImage: productImagePaths,
+    });
 
-    const existingProduct = await productDB.findById(productId);
-
-    if (req.files && req.files.length > 0) {
-      updateData.productImage = req.files.map(
-        (file) => `/uploads/${file.filename}`
-      );
-    } else {
-      updateData.productImage = existingProduct.productImage;
-    }
-
-    const updatedProduct = await productDB.findByIdAndUpdate(
-      productId,
-      updateData,
-      { new: true }
-    );
-
-    console.log("Updated Product:", updatedProduct);
-
-    res.json({ success: true });
+    res.redirect("/admin/getproduct");
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).send("Error adding product");
+  }
+};
+
+const Editproduct_get = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await productDB.findById(productId);
+    const category = await categoryDB.find();
+    res.render("admin/edit_product", {
+      product,
+      category,
+      errorMessage: req.flash("error"),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const Editproduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { productName, category, price, stock, description } = req.body;
+    const productImages = req.files;
+
+    const product = await productDB.findById(productId);
+
+    if (!productName || productName.trim() === "") {
+      req.flash("error", "Please enter a valid product name.");
+      return res.redirect(`/admin/editproduct/${productId}`);
+    }
+    if (!category || category === "Select Category") {
+      req.flash("error", "Please select a category.");
+      return res.redirect(`/admin/editproduct/${productId}`);
+    }
+    if (!price || price <= 0) {
+      req.flash("error", "Please enter a valid price.");
+      return res.redirect(`/admin/editproduct/${productId}`);
+    }
+    if (!stock || stock <= 0) {
+      req.flash("error", "Please enter a valid stock amount.");
+      return res.redirect(`/admin/editproduct/${productId}`);
+    }
+    if (!description || description.trim() === "") {
+      req.flash("error", "Description cannot be empty or contain only spaces.");
+      return res.redirect(`/admin/editproduct/${productId}`);
+    }
+    if (productImages && productImages.length > 0) {
+      const validImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+        "image/jfif",
+        "image/webp",
+      ];
+      const invalidImages = productImages.filter(
+        (image) => !validImageTypes.includes(image.mimetype)
+      );
+
+      if (invalidImages.length > 0) {
+        req.flash(
+          "error",
+          "Please upload valid images (JPEG, PNG, JPG, JFIF, WEBP)."
+        );
+        return res.redirect(`/admin/editproduct/${productId}`);
+      }
+    }
+
+    const productImagePaths = productImages.length
+      ? productImages.map((file) => `/uploads/${file.filename}`)
+      : product.productImage;
+
+    await productDB.findByIdAndUpdate(productId, {
+      productName,
+      category,
+      price,
+      stock,
+      description,
+      productImage: productImagePaths,
+    });
+
+    res.redirect("/admin/getproduct");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error updating product");
   }
 };
 
@@ -157,8 +200,10 @@ const unblockproduct = async (req, res) => {
 
 module.exports = {
   getproduct,
-  addproduct,
-  editproduct,
+  Addproduct_get,
+  Addproduct,
+  Editproduct_get,
+  Editproduct,
   blockproduct,
   unblockproduct,
 };

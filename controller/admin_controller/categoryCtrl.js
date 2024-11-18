@@ -26,36 +26,37 @@ const getcategory = async (req, res) => {
   }
 };
 
-const addcategory = async (req, res) => {
+const Addcategory_get = async (req, res) => {
   try {
-    const { categoryName, description, discount } = req.body;
-    const categoryImages = req.files;
+    res.render("admin/add_category", {
+      errorMessage: req.flash("error"),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const Addcategory = async (req, res) => {
+  try {
+    const { categoryName, description } = req.body;
+    const categoryImage = req.files;
 
     if (!categoryName || !categoryName.trim()) {
-      return res.json({
-        error:
-          "Please enter a valid category name without spaces before and after",
-      });
+      req.flash(
+        "error",
+        "Please enter a valid category name without spaces before and after."
+      );
+      return res.redirect("/admin/addcategory");
     }
 
     if (!description || !description.trim()) {
-      return res.json({
-        error: "Description cannot be empty or contain only spaces",
-      });
+      req.flash("error", "Description cannot be empty or contain only spaces.");
+      return res.redirect("/admin/addcategory");
     }
 
-    if (!discount || discount <= 0 || discount >= 100) {
-      return res.json({ error: "Please enter a valid discount" });
-    }
-
-    const existingCategory = await categoryDB.findOne({
-      categoryName: new RegExp(`^${categoryName.trim()}$`, "i"),
-    });
-
-    if (existingCategory) {
-      return res.json({
-        error: "This category is already added",
-      });
+    if (!categoryImage || categoryImage.length === 0) {
+      req.flash("error", "Please upload at least one image.");
+      return res.redirect("/admin/addcategory");
     }
 
     const validImageTypes = [
@@ -63,62 +64,106 @@ const addcategory = async (req, res) => {
       "image/png",
       "image/jpg",
       "image/jfif",
+      "image/webp",
     ];
-
-    if (!categoryImages || categoryImages.length === 0) {
-      return res.json({ error: "Please select an image" });
-    }
-
-    const invalidImage = categoryImages.find(
+    const invalidImages = categoryImage.filter(
       (img) => !validImageTypes.includes(img.mimetype)
     );
-    if (invalidImage) {
-      return res.json({
-        error: "Please upload a valid image (JPEG, PNG, JPG, JFIF)",
-      });
+
+    if (invalidImages.length > 0) {
+      req.flash(
+        "error",
+        "Please upload valid images (JPEG, PNG, JPG, JFIF, WEBP)."
+      );
+      return res.redirect("/admin/addcategory");
     }
 
-    const categoryImagePaths = categoryImages.map(
-      (file) => `/uploads/${file.filename}`
-    );
+    const imagePath = categoryImage.map((file) => `/uploads/${file.filename}`);
 
+    await categoryDB.create({
+      categoryName: categoryName.trim(),
+      description: description.trim(),
+      categoryImage: imagePath,
+    });
 
-    res.json({ success: true });
+    res.redirect("/admin/getcategory");
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error adding category:", error);
+    res.status(500).send("Error adding category");
   }
 };
 
-const editcategory = async (req, res) => {
+const Editcategory_get = async (req, res) => {
   try {
     const categoryId = req.params.id;
-    const { categoryName, description, discount } = req.body;
-
-    let updateData = {
-      categoryName,
-      description,
-      discount,
-    };
-
-    if (req.files && req.files.length > 0) {
-      updateData.categoryImage = req.files.map(
-        (file) => `/uploads/${file.filename}`
-      );
-    }
-
-    const updatedCategory = await categoryDB.findByIdAndUpdate(
-      categoryId,
-      updateData,
-      { new: true }
-    );
-
-    console.log("Updated Category:", updatedCategory);
-
-    res.json({ success: true });
+    const category = await categoryDB.findById(categoryId);
+    res.render("admin/edit_category", {
+      category,
+      errorMessage: req.flash("error"),
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const Editcategory = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const { categoryName, description } = req.body;
+    const categoryImage = req.files;
+
+    const category = await categoryDB.findById(categoryId);
+
+    if (!category) {
+      req.flash("error", "Category not found.");
+      return res.redirect(`/admin/Editcategory/${categoryId}`);
+    }
+
+    if (!categoryName || !categoryName.trim()) {
+      req.flash("error", "Please enter a valid category name.");
+      return res.redirect(`/admin/Editcategory/${categoryId}`);
+    }
+
+    if (!description || !description.trim()) {
+      req.flash("error", "Description cannot be empty or contain only spaces.");
+      return res.redirect(`/admin/Editcategory/${categoryId}`);
+    }
+
+    const validImageTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/jfif",
+      "image/webp",
+    ];
+    let imagePath = category.categoryImage;
+
+    if (categoryImage && categoryImage.length > 0) {
+      const invalidImages = categoryImage.filter(
+        (img) => !validImageTypes.includes(img.mimetype)
+      );
+
+      if (invalidImages.length > 0) {
+        req.flash(
+          "error",
+          "Please upload valid images (JPEG, PNG, JPG, JFIF, WEBP)."
+        );
+        return res.redirect(`/admin/Editcategory/${categoryId}`);
+      }
+
+      imagePath = categoryImage.map((file) => `/uploads/${file.filename}`);
+    }
+
+    await categoryDB.findByIdAndUpdate(categoryId, {
+      categoryName: categoryName,
+      description: description,
+      categoryImage: imagePath,
+    });
+
+    res.redirect("/admin/getcategory");
+  } catch (error) {
+    console.error("Error updating category:", error);
+    res.status(500).send("Error updating category");
   }
 };
 
@@ -148,8 +193,10 @@ const unblockcategory = async (req, res) => {
 
 module.exports = {
   getcategory,
-  addcategory,
-  editcategory,
+  Addcategory_get,
+  Addcategory,
+  Editcategory_get,
+  Editcategory,
   blockcategory,
   unblockcategory,
 };
