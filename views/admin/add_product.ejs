@@ -484,6 +484,8 @@
                 showError('description', 'Description cannot be empty or contain only spaces.');
             } else if (images.length === 0) {
                 showError('image', 'Please select at least one image.');
+            }else if (images.length > 3) {
+                showError('image', 'You can only select up to 3 images.');
             } else {
                 Array.from(images).forEach(image => {
                     if (!validImageTypes.includes(image.type)) {

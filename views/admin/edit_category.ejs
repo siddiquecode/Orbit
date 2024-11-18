@@ -462,7 +462,9 @@
             } else if (!description) {
                 showError('description', 'Description cannot be empty or contain only spaces.');
             } else if (images.length === 0) {
-                showError('image', 'Please select at least one image.');
+                showError('image', 'Please select an image.');
+            } else if (images.length > 1) {
+                showError('image', 'Please select only one image.');
             } else {
                 Array.from(images).forEach(image => {
                     if (!validImageTypes.includes(image.type)) {
