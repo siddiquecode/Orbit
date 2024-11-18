@@ -80,11 +80,13 @@ const Addcategory = async (req, res) => {
 
     const imagePath = categoryImage.map((file) => `/uploads/${file.filename}`);
 
+
     await categoryDB.create({
       categoryName: categoryName.trim(),
       description: description.trim(),
       categoryImage: imagePath,
     });
+
 
     res.redirect("/admin/getcategory");
   } catch (error) {
