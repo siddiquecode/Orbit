@@ -2,7 +2,7 @@ const categoryDB = require("../../models/category");
 const productDB = require("../../models/products");
 const offerDB = require("../../models/offer");
 
-const getoffer = async (req, res) => {
+const getOffer = async (req, res) => {
   try {
     const itemsPerPage = 10;
     const currentPage = parseInt(req.query.page) || 1;
@@ -27,7 +27,7 @@ const getoffer = async (req, res) => {
   }
 };
 
-const addoffer_get = async (req, res) => {
+const addOffer_Get = async (req, res) => {
   try {
     res.render("admin/add_offer", { errorMessage: req.flash("error") });
   } catch (error) {
@@ -35,7 +35,7 @@ const addoffer_get = async (req, res) => {
   }
 };
 
-const addoffer = async (req, res) => {
+const addOffer_Post = async (req, res) => {
   try {
     const { offerType, name, discount } = req.body;
 
@@ -97,7 +97,7 @@ const getOptions = async (req, res) => {
   }
 };
 
-const editoffer_get = async (req, res) => {
+const editOffer_Get = async (req, res) => {
   try {
     const offerId = req.params.id;
     const offer = await offerDB
@@ -114,7 +114,7 @@ const editoffer_get = async (req, res) => {
   }
 };
 
-const editoffer = async (req, res) => {
+const editOffer_Post = async (req, res) => {
   try {
     const offerId = req.params.id;
     const { offerType, name, discount } = req.body;
@@ -165,7 +165,7 @@ const editoffer = async (req, res) => {
   }
 };
 
-const deleteoffer = async (req, res) => {
+const deleteOffer = async (req, res) => {
   try {
     const offerId = req.params.id;
     const offer = await offerDB.findById(offerId);
@@ -189,11 +189,11 @@ const deleteoffer = async (req, res) => {
 };
 
 module.exports = {
-  getoffer,
-  addoffer_get,
-  addoffer,
+  getOffer,
+  addOffer_Get,
+  addOffer_Post,
   getOptions,
-  editoffer_get,
-  editoffer,
-  deleteoffer,
+  editOffer_Get,
+  editOffer_Post,
+  deleteOffer,
 };

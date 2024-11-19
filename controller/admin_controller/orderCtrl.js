@@ -4,7 +4,7 @@ const WalletDB = require("../../models/wallet");
 const PDFDocument = require("pdfkit");
 const ExcelJS = require("exceljs");
 
-const getorder = async (req, res) => {
+const getOrder = async (req, res) => {
   try {
     const itemsPerPage = 10;
     const page = parseInt(req.query.page || 1);
@@ -153,7 +153,7 @@ const update_OrderStatus = async (req, res) => {
   }
 };
 
-const getreport = async (req, res) => {
+const getReport = async (req, res) => {
   try {
     const { startDate, endDate, filter, page = 1 } = req.query;
     const limit = 10;
@@ -251,7 +251,7 @@ const getreport = async (req, res) => {
   }
 };
 
-const download_pdf = async (req, res) => {
+const download_Pdf = async (req, res) => {
   try {
     const { startDate, endDate, filter } = req.query;
 
@@ -424,7 +424,7 @@ const download_pdf = async (req, res) => {
   }
 };
 
-const download_excel = async (req, res) => {
+const download_Excel = async (req, res) => {
   try {
     const { startDate, endDate, filter } = req.query;
 
@@ -516,9 +516,9 @@ const download_excel = async (req, res) => {
 };
 
 module.exports = {
-  getorder,
+  getOrder,
   update_OrderStatus,
-  getreport,
-  download_pdf,
-  download_excel,
+  getReport,
+  download_Pdf,
+  download_Excel,
 };

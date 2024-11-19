@@ -33,143 +33,143 @@ const fileFilter = (req, file, cb) => {
 };
 
 // .................... login & signup
-adminRouter.get("/", adminController.getlogin);
-adminRouter.post("/", adminController.postlogin);
+adminRouter.get("/", adminController.getLogin);
+adminRouter.post("/", adminController.postLogin);
 adminRouter.get(
   "/getdashboard",
   adminAuthenticated,
-  adminController.getdashboard
+  adminController.getDashboard
 );
 adminRouter.post("/logout", adminController.logout);
 
 // .................... user
-adminRouter.get("/users", adminAuthenticated, adminController.getuser);
-adminRouter.patch("/users/:id/block", adminController.blockuser);
-adminRouter.patch("/users/:id/unblock", adminController.unblockuser);
+adminRouter.get("/users", adminAuthenticated, adminController.getUser);
+adminRouter.patch("/users/:id/block", adminController.blockUser);
+adminRouter.patch("/users/:id/unblock", adminController.unblockUser);
 
 // .................... category
 adminRouter.get(
   "/getcategory",
   adminAuthenticated,
-  categoryController.getcategory
+  categoryController.getCategory
 );
 adminRouter.get(
   "/Addcategory",
   adminAuthenticated,
-  categoryController.Addcategory_get
+  categoryController.addCategory_Get
 );
 adminRouter.post(
   "/Addcategory",
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 1),
-  categoryController.Addcategory
+  categoryController.addCategory_Post
 );
 adminRouter.get(
   "/Editcategory/:id",
   adminAuthenticated,
-  categoryController.Editcategory_get
+  categoryController.editCategory_Get
 );
 adminRouter.post(
   "/Editcategory/:id",
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 1),
-  categoryController.Editcategory
+  categoryController.editCategory_Post
 );
-adminRouter.post("/blockcategory/:id", categoryController.blockcategory);
-adminRouter.post("/unblockcategory/:id", categoryController.unblockcategory);
+adminRouter.post("/blockcategory/:id", categoryController.blockCategory);
+adminRouter.post("/unblockcategory/:id", categoryController.unblockCategory);
 
 // .................... product
 adminRouter.get(
   "/getproduct",
   adminAuthenticated,
-  productController.getproduct
+  productController.getProduct
 );
 adminRouter.get(
   "/Addproduct",
   adminAuthenticated,
-  productController.Addproduct_get
+  productController.addProduct_Get
 );
 adminRouter.post(
   "/Addproduct",
   adminAuthenticated,
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 3),
-  productController.Addproduct
+  productController.addProduct_Post
 );
 adminRouter.get(
   "/Editproduct/:id",
   adminAuthenticated,
-  productController.Editproduct_get
+  productController.editProduct_Get
 );
 adminRouter.post(
   "/Editproduct/:id",
   adminAuthenticated,
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 3),
-  productController.Editproduct
+  productController.editProduct_Post
 );
-adminRouter.post("/blockproduct/:id", productController.blockproduct);
-adminRouter.post("/unblockproduct/:id", productController.unblockproduct);
+adminRouter.post("/blockproduct/:id", productController.blockProduct);
+adminRouter.post("/unblockproduct/:id", productController.unblockProduct);
 
 // .................... coupon
-adminRouter.get("/getcoupon", adminAuthenticated, couponController.getcoupon);
+adminRouter.get("/getcoupon", adminAuthenticated, couponController.getCoupon);
 adminRouter.get(
   "/addcoupon",
   adminAuthenticated,
-  couponController.get_addcoupon
+  couponController.addCoupon_Get
 );
-adminRouter.post("/addcoupon", adminAuthenticated, couponController.addcoupon);
+adminRouter.post("/addcoupon", adminAuthenticated, couponController.addCoupon_Post);
 adminRouter.get(
   "/editcoupon/:id",
   adminAuthenticated,
-  couponController.get_editcoupon
+  couponController.editCoupon_Get
 );
 adminRouter.put(
   "/editcoupon/:id",
   adminAuthenticated,
-  couponController.editcoupon
+  couponController.editCoupon_Post
 );
 adminRouter.delete(
   "/deletecoupon/:id",
   adminAuthenticated,
-  couponController.deletecoupon
+  couponController.deleteCoupon
 );
 
 // .................... order
-adminRouter.get("/getorder", adminAuthenticated, orderController.getorder);
+adminRouter.get("/getorder", adminAuthenticated, orderController.getOrder);
 adminRouter.patch(
   "/updateOrderStatus/:orderId/:productId",
   orderController.update_OrderStatus
 );
 
 // .................... sales report
-adminRouter.get("/getreport", adminAuthenticated, orderController.getreport);
+adminRouter.get("/getreport", adminAuthenticated, orderController.getReport);
 adminRouter.get(
   "/downloadPDF",
   adminAuthenticated,
-  orderController.download_pdf
+  orderController.download_Pdf
 );
 adminRouter.get(
   "/downloadEXCEL",
   adminAuthenticated,
-  orderController.download_excel
+  orderController.download_Excel
 );
 
 // .................... offer module
-adminRouter.get("/getoffer", adminAuthenticated, offerController.getoffer);
-adminRouter.get("/addoffer", adminAuthenticated, offerController.addoffer_get);
-adminRouter.post("/addoffer", adminAuthenticated, offerController.addoffer);
+adminRouter.get("/getoffer", adminAuthenticated, offerController.getOffer);
+adminRouter.get("/addoffer", adminAuthenticated, offerController.addOffer_Get);
+adminRouter.post("/addoffer", adminAuthenticated, offerController.addOffer_Post);
 adminRouter.get("/getOptions", adminAuthenticated, offerController.getOptions);
 adminRouter.get(
   "/editoffer/:id",
   adminAuthenticated,
-  offerController.editoffer_get
+  offerController.editOffer_Get
 );
 adminRouter.put(
   "/editoffer/:id",
   adminAuthenticated,
-  offerController.editoffer
+  offerController.editOffer_Post
 );
 adminRouter.delete(
   "/deleteoffer/:id",
   adminAuthenticated,
-  offerController.deleteoffer
+  offerController.deleteOffer
 );
 
 module.exports = adminRouter;

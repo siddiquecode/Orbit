@@ -1,6 +1,6 @@
 const couponDB = require("../../models/coupon");
 
-const getcoupon = async (req, res) => {
+const getCoupon = async (req, res) => {
   try {
     const coupons = await couponDB.find({});
     res.render("admin/coupon", {
@@ -11,7 +11,7 @@ const getcoupon = async (req, res) => {
   }
 };
 
-const get_addcoupon = async (req, res) => {
+const addCoupon_Get = async (req, res) => {
   try {
     res.render("admin/add_coupon");
   } catch (error) {
@@ -19,7 +19,7 @@ const get_addcoupon = async (req, res) => {
   }
 };
 
-const addcoupon = async (req, res) => {
+const addCoupon_Post = async (req, res) => {
   try {
     const { couponCode, discount, minimumAmount, maximumAmount, expireDate } =
       req.body;
@@ -39,7 +39,7 @@ const addcoupon = async (req, res) => {
   }
 };
 
-const get_editcoupon = async (req, res) => {
+const editCoupon_Get = async (req, res) => {
   try {
     const couponId = req.params.id;
     const coupon = await couponDB.findById(couponId);
@@ -52,12 +52,11 @@ const get_editcoupon = async (req, res) => {
   }
 };
 
-const editcoupon = async (req, res) => {
+const editCoupon_Post = async (req, res) => {
   try {
     const couponId = req.params.id;
     const { couponCode, discount, minimumAmount, maximumAmount, expireDate } =
       req.body;
-
 
     res.redirect("/admin/getcoupon");
   } catch (error) {
@@ -65,7 +64,7 @@ const editcoupon = async (req, res) => {
   }
 };
 
-const deletecoupon = async (req, res) => {
+const deleteCoupon = async (req, res) => {
   try {
     const couponId = req.params.id;
     res.status(200).json({ message: "Coupon deleted successfully" });
@@ -76,10 +75,10 @@ const deletecoupon = async (req, res) => {
 };
 
 module.exports = {
-  getcoupon,
-  get_addcoupon,
-  addcoupon,
-  get_editcoupon,
-  editcoupon,
-  deletecoupon,
+  getCoupon,
+  addCoupon_Get,
+  addCoupon_Post,
+  editCoupon_Get,
+  editCoupon_Post,
+  deleteCoupon,
 };

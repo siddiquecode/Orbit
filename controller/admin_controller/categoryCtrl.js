@@ -1,7 +1,7 @@
 const categoryDB = require("../../models/category");
 const productDB = require("../../models/products");
 
-const getcategory = async (req, res) => {
+const getCategory = async (req, res) => {
   try {
     const itemsPerPage = 10;
     const page = parseInt(req.query.page || 1);
@@ -26,7 +26,7 @@ const getcategory = async (req, res) => {
   }
 };
 
-const Addcategory_get = async (req, res) => {
+const addCategory_Get = async (req, res) => {
   try {
     res.render("admin/add_category", {
       errorMessage: req.flash("error"),
@@ -36,7 +36,7 @@ const Addcategory_get = async (req, res) => {
   }
 };
 
-const Addcategory = async (req, res) => {
+const addCategory_Post = async (req, res) => {
   try {
     const { categoryName, description } = req.body;
     const categoryImage = req.files;
@@ -93,7 +93,7 @@ const Addcategory = async (req, res) => {
   }
 };
 
-const Editcategory_get = async (req, res) => {
+const editCategory_Get = async (req, res) => {
   try {
     const categoryId = req.params.id;
     const category = await categoryDB.findById(categoryId);
@@ -106,7 +106,7 @@ const Editcategory_get = async (req, res) => {
   }
 };
 
-const Editcategory = async (req, res) => {
+const editCategory_Post = async (req, res) => {
   try {
     const categoryId = req.params.id;
     const { categoryName, description } = req.body;
@@ -167,7 +167,7 @@ const Editcategory = async (req, res) => {
   }
 };
 
-const blockcategory = async (req, res) => {
+const blockCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
     await categoryDB.findByIdAndUpdate(categoryId, { isBlocked: true });
@@ -179,7 +179,7 @@ const blockcategory = async (req, res) => {
   }
 };
 
-const unblockcategory = async (req, res) => {
+const unblockCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
     await categoryDB.findByIdAndUpdate(categoryId, { isBlocked: false });
@@ -192,11 +192,11 @@ const unblockcategory = async (req, res) => {
 };
 
 module.exports = {
-  getcategory,
-  Addcategory_get,
-  Addcategory,
-  Editcategory_get,
-  Editcategory,
-  blockcategory,
-  unblockcategory,
+  getCategory,
+  addCategory_Get,
+  addCategory_Post,
+  editCategory_Get,
+  editCategory_Post,
+  blockCategory,
+  unblockCategory,
 };

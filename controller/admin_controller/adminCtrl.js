@@ -1,7 +1,7 @@
 const orderDB = require("../../models/order");
 const userDB = require("../../models/user");
 
-const getlogin = (req, res) => {
+const getLogin = (req, res) => {
   try {
     if (req.session.adminLoggedIn) {
       res.redirect("/admin/getdashboard");
@@ -13,7 +13,7 @@ const getlogin = (req, res) => {
   }
 };
 
-const postlogin = async (req, res) => {
+const postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log(req.body);
@@ -33,7 +33,7 @@ const postlogin = async (req, res) => {
   }
 };
 
-const getdashboard = async (req, res) => {
+const getDashboard = async (req, res) => {
   try {
     const totalOrders = await orderDB.countDocuments();
 
@@ -290,7 +290,7 @@ const logout = (req, res) => {
   }
 };
 
-const getuser = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const itemsPerPage = 10;
     const page = parseInt(req.query.page || 1);
@@ -315,7 +315,7 @@ const getuser = async (req, res) => {
   }
 };
 
-const blockuser = async (req, res) => {
+const blockUser = async (req, res) => {
   try {
     const userId = req.params.id;
     await userDB.findByIdAndUpdate(userId, { isBlocked: true });
@@ -326,7 +326,7 @@ const blockuser = async (req, res) => {
   }
 };
 
-const unblockuser = async (req, res) => {
+const unblockUser = async (req, res) => {
   try {
     const userId = req.params.id;
     await userDB.findByIdAndUpdate(userId, { isBlocked: false });
@@ -338,11 +338,11 @@ const unblockuser = async (req, res) => {
 };
 
 module.exports = {
-  getlogin,
-  postlogin,
-  getdashboard,
+  getLogin,
+  postLogin,
+  getDashboard,
   logout,
-  getuser,
-  blockuser,
-  unblockuser,
+  getUser,
+  blockUser,
+  unblockUser,
 };

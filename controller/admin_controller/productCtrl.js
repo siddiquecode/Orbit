@@ -1,7 +1,7 @@
 const categoryDB = require("../../models/category");
 const productDB = require("../../models/products");
 
-const getproduct = async (req, res) => {
+const getProduct = async (req, res) => {
   try {
     const itemsPerPage = 10;
     const page = parseInt(req.query.page) || 1;
@@ -29,7 +29,7 @@ const getproduct = async (req, res) => {
   }
 };
 
-const Addproduct_get = async (req, res) => {
+const addProduct_Get = async (req, res) => {
   try {
     const category = await categoryDB.find();
     res.render("admin/add_product", {
@@ -42,7 +42,7 @@ const Addproduct_get = async (req, res) => {
   }
 };
 
-const Addproduct = async (req, res) => {
+const addProduct_Post = async (req, res) => {
   try {
     const { productName, category, price, stock, description } = req.body;
     const productImages = req.files;
@@ -92,7 +92,7 @@ const Addproduct = async (req, res) => {
   }
 };
 
-const Editproduct_get = async (req, res) => {
+const editProduct_Get = async (req, res) => {
   try {
     const productId = req.params.id;
     const product = await productDB.findById(productId);
@@ -107,7 +107,7 @@ const Editproduct_get = async (req, res) => {
   }
 };
 
-const Editproduct = async (req, res) => {
+const editProduct_Post = async (req, res) => {
   try {
     const productId = req.params.id;
     const { productName, category, price, stock, description } = req.body;
@@ -176,7 +176,7 @@ const Editproduct = async (req, res) => {
   }
 };
 
-const blockproduct = async (req, res) => {
+const blockProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     await productDB.findByIdAndUpdate(productId, { isBlocked: true });
@@ -187,7 +187,7 @@ const blockproduct = async (req, res) => {
   }
 };
 
-const unblockproduct = async (req, res) => {
+const unblockProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     await productDB.findByIdAndUpdate(productId, { isBlocked: false });
@@ -199,11 +199,11 @@ const unblockproduct = async (req, res) => {
 };
 
 module.exports = {
-  getproduct,
-  Addproduct_get,
-  Addproduct,
-  Editproduct_get,
-  Editproduct,
-  blockproduct,
-  unblockproduct,
+  getProduct,
+  addProduct_Get,
+  addProduct_Post,
+  editProduct_Get,
+  editProduct_Post,
+  blockProduct,
+  unblockProduct,
 };
