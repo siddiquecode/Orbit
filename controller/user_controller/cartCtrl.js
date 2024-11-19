@@ -2,7 +2,7 @@ const cartDB = require("../../models/cart");
 const couponDB = require("../../models/coupon");
 const productDB = require("../../models/products");
 
-const cart = async (req, res) => {
+const userCart = async (req, res) => {
   try {
     const userId = req.user._id;
 
@@ -94,7 +94,7 @@ const cart = async (req, res) => {
   }
 };
 
-const add_cart = async (req, res) => {
+const addToCart = async (req, res) => {
   try {
     const productId = req.params.id;
     const user = req.user;
@@ -143,7 +143,7 @@ const add_cart = async (req, res) => {
   }
 };
 
-const update_quantity = async (req, res) => {
+const updateQuantity = async (req, res) => {
   try {
     const { quantity } = req.body;
     const productId = req.params.id;
@@ -220,7 +220,7 @@ const update_quantity = async (req, res) => {
   }
 };
 
-const remove_item = async (req, res) => {
+const removeItem = async (req, res) => {
   try {
     const productId = req.params.id;
     const user = req.user;
@@ -258,8 +258,8 @@ const remove_item = async (req, res) => {
 };
 
 module.exports = {
-  cart,
-  add_cart,
-  update_quantity,
-  remove_item,
+  userCart,
+  addToCart,
+  updateQuantity,
+  removeItem,
 };

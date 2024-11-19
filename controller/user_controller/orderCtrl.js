@@ -9,7 +9,7 @@ const razorpayInstance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-const userorders = async (req, res) => {
+const userOrders = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 5;
@@ -469,7 +469,7 @@ const paymentSuccess = async (req, res) => {
 };
 
 module.exports = {
-  userorders,
+  userOrders,
   orderDetails,
   downloadInvoice,
   returnOrder,

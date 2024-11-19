@@ -1,7 +1,7 @@
 const orderDB = require("../../models/order");
 const userDB = require("../../models/user");
 
-const getLogin = (req, res) => {
+const login_Get = (req, res) => {
   try {
     if (req.session.adminLoggedIn) {
       res.redirect("/admin/getdashboard");
@@ -13,7 +13,7 @@ const getLogin = (req, res) => {
   }
 };
 
-const postLogin = async (req, res) => {
+const login_Post = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log(req.body);
@@ -338,8 +338,8 @@ const unblockUser = async (req, res) => {
 };
 
 module.exports = {
-  getLogin,
-  postLogin,
+  login_Get,
+  login_Post,
   getDashboard,
   logout,
   getUser,

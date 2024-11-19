@@ -149,7 +149,7 @@ const searchCategory = async (req, res) => {
   }
 };
 
-const productlist = async (req, res) => {
+const productList = async (req, res) => {
   try {
     const isLoggedIn = req.session.user ? true : false;
     user = await userDB.findOne({ email: req.session.user });
@@ -235,7 +235,7 @@ const productlist = async (req, res) => {
   }
 };
 
-const productdetails = async (req, res) => {
+const productDetails = async (req, res) => {
   try {
     const productId = req.params.id;
 
@@ -351,8 +351,8 @@ const logout = (req, res) => {
 module.exports = {
   home,
   searchCategory,
-  productlist,
-  productdetails,
+  productList,
+  productDetails,
   categories,
   logout,
 };

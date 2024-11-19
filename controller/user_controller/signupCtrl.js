@@ -57,7 +57,7 @@ function checkSignUpError(data) {
   }
 }
 
-const signup = async (req, res) => {
+const signup_Get = async (req, res) => {
   try {
     if (req.session.user) {
       return res.redirect("/");
@@ -72,7 +72,7 @@ const generateReferralCode = () => {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 };
 
-const signuppost = async (req, res) => {
+const signup_Post = async (req, res) => {
   try {
     const { firstname, lastname, email, password, referrelcode } = req.body;
 
@@ -137,7 +137,7 @@ const signuppost = async (req, res) => {
   }
 };
 
-const getotp = async (req, res) => {
+const otp_Get = async (req, res) => {
   try {
     res.render("user/otp", { errorMessage: req.flash("error") });
   } catch (error) {
@@ -145,7 +145,7 @@ const getotp = async (req, res) => {
   }
 };
 
-const postotp = async (req, res) => {
+const otp_Post = async (req, res) => {
   try {
     const { otp } = req.body;
     console.log("Entered OTP:", otp);
@@ -251,7 +251,7 @@ const resentOtp = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const login_Get = async (req, res) => {
   if (req.session.user) {
     return res.redirect("/");
   } else {
@@ -262,7 +262,7 @@ const login = async (req, res) => {
   }
 };
 
-const loginpost = async (req, res) => {
+const login_Post = async (req, res) => {
   try {
     const user = await userDB.findOne({ email: req.body.email });
 
@@ -306,11 +306,11 @@ const loginpost = async (req, res) => {
 };
 
 module.exports = {
-  signup,
-  signuppost,
-  getotp,
-  postotp,
+  signup_Get,
+  signup_Post,
+  otp_Get,
+  otp_Post,
   resentOtp,
-  login,
-  loginpost,
+  login_Get,
+  login_Post,
 };

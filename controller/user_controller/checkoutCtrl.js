@@ -11,7 +11,7 @@ var razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-const checkout_get = async (req, res) => {
+const userCheckout = async (req, res) => {
   try {
     const user = req.user;
 
@@ -112,7 +112,7 @@ const checkout_get = async (req, res) => {
   }
 };
 
-const get_checkoutAddress = async (req, res) => {
+const checkoutAddress_Get = async (req, res) => {
   try {
     const user = req.user;
     const address = await addressDB.findOne({ user: user._id });
@@ -127,7 +127,7 @@ const get_checkoutAddress = async (req, res) => {
   }
 };
 
-const add_checkoutAddress = async (req, res) => {
+const checkoutAddress_Post = async (req, res) => {
   try {
     const user = req.user;
 
@@ -151,7 +151,7 @@ const add_checkoutAddress = async (req, res) => {
   }
 };
 
-const editcheckout_address = async (req, res) => {
+const editCheckoutAddress_Get = async (req, res) => {
   try {
     const addressId = req.params.id;
     const user = req.user;
@@ -175,7 +175,7 @@ const editcheckout_address = async (req, res) => {
   }
 };
 
-const update_address = async (req, res) => {
+const editCheckoutAddress_Post = async (req, res) => {
   try {
     const addressId = req.params.id;
 
@@ -580,11 +580,11 @@ const verifyRazorpayPayment = async (req, res) => {
 };
 
 module.exports = {
-  checkout_get,
-  get_checkoutAddress,
-  add_checkoutAddress,
-  editcheckout_address,
-  update_address,
+  userCheckout,
+  checkoutAddress_Get,
+  checkoutAddress_Post,
+  editCheckoutAddress_Get,
+  editCheckoutAddress_Post,
   codController,
   walletPayController,
   createRazorpayOrder,

@@ -30,97 +30,97 @@ router.get(
 // ....................home
 router.get("/", homecontroller.home);
 router.get("/search", homecontroller.searchCategory);
-router.get("/productlist/:page?", homecontroller.productlist);
+router.get("/productlist/:page?", homecontroller.productList);
 router.get(
   "/productdetails/:id",
   userAuthenticated,
-  homecontroller.productdetails
+  homecontroller.productDetails
 );
 router.get("/products/:categoryId", homecontroller.categories);
 router.post("/userlogout", homecontroller.logout);
 
 // ....................signup
-router.get("/usersignup", signupcontroller.signup);
-router.post("/usersignup", signupcontroller.signuppost);
-router.get("/otp", signupcontroller.getotp);
-router.post("/postotp", signupcontroller.postotp);
+router.get("/usersignup", signupcontroller.signup_Get);
+router.post("/usersignup", signupcontroller.signup_Post);
+router.get("/otp", signupcontroller.otp_Get);
+router.post("/postotp", signupcontroller.otp_Post);
 router.post("/resentOtp", signupcontroller.resentOtp);
-router.get("/userlogin", signupcontroller.login);
-router.post("/userlogin", signupcontroller.loginpost);
+router.get("/userlogin", signupcontroller.login_Get);
+router.post("/userlogin", signupcontroller.login_Post);
 
 //  .................... forgot password
-router.get("/forgot", forgotANDresetcontroller.forgot);
-router.post("/forgot", forgotANDresetcontroller.forgotPost);
-router.get("/forgototp", forgotANDresetcontroller.forgototp);
-router.post("/forgototpPost", forgotANDresetcontroller.forgototpPost);
-router.get("/resetpassword", forgotANDresetcontroller.resetpassword);
-router.post("/resetpasswordpost", forgotANDresetcontroller.resetpasswordPost);
-router.post("/forgotresentOtp", forgotANDresetcontroller.forgotresentOtp);
+router.get("/forgot", forgotANDresetcontroller.forgot_Get);
+router.post("/forgot", forgotANDresetcontroller.forgot_Post);
+router.get("/forgototp", forgotANDresetcontroller.forgotOtp_Get);
+router.post("/forgototpPost", forgotANDresetcontroller.forgotOtp_Post);
+router.get("/resetpassword", forgotANDresetcontroller.resetPassword_Get);
+router.post("/resetpasswordpost", forgotANDresetcontroller.resetPassword_Post);
+router.post("/forgotresentOtp", forgotANDresetcontroller.forgotResentOtp);
 
 //  .................... profile
-router.get("/userprofile", userAuthenticated, profilecontroller.userprofile);
+router.get("/userprofile", userAuthenticated, profilecontroller.userProfile);
 router.get(
   "/userprofile/edit",
   userAuthenticated,
-  profilecontroller.edit_getprofile
+  profilecontroller.editProfile_Get
 );
 router.post(
   "/editprofile/:id",
   userAuthenticated,
-  profilecontroller.editprofile
+  profilecontroller.editProfile_Post
 );
 router.get(
   "/changepassword",
   userAuthenticated,
-  profilecontroller.get_changepassword
+  profilecontroller.changePassword_Get
 );
 router.post(
   "/changepassword",
   userAuthenticated,
-  profilecontroller.changepassword
+  profilecontroller.changePassword_Post
 );
 
 //  .................... address
-router.get("/useraddress", userAuthenticated, Addresscontroller.useraddress);
-router.get("/Addaddress", userAuthenticated, Addresscontroller.get_address);
-router.post("/Addaddress", userAuthenticated, Addresscontroller.add_address);
+router.get("/useraddress", userAuthenticated, Addresscontroller.userAddress);
+router.get("/Addaddress", userAuthenticated, Addresscontroller.addAddress_Get);
+router.post("/Addaddress", userAuthenticated, Addresscontroller.addAddress_Post);
 router.get(
   "/updateAddress/:id",
   userAuthenticated,
-  Addresscontroller.geteditAddress
+  Addresscontroller.editAddress_Get
 );
 router.post(
   "/updateAddress/:id",
   userAuthenticated,
-  Addresscontroller.editaddress
+  Addresscontroller.editAddress_Post
 );
 router.delete(
   "/useraddress/:id",
   userAuthenticated,
-  Addresscontroller.delete_address
+  Addresscontroller.deleteAddress
 );
 
 //  .................... checkout
-router.get("/checkout", userAuthenticated, checkoutcontroller.checkout_get);
+router.get("/checkout", userAuthenticated, checkoutcontroller.userCheckout);
 router.get(
   "/AddCheckoutAddress",
   userAuthenticated,
-  checkoutcontroller.get_checkoutAddress
+  checkoutcontroller.checkoutAddress_Get
 );
 router.post(
   "/AddCheckoutAddress",
   userAuthenticated,
-  checkoutcontroller.add_checkoutAddress
+  checkoutcontroller.checkoutAddress_Post
 );
 router.get(
   "/checkoutAddress/:id",
   userAuthenticated,
-  checkoutcontroller.editcheckout_address
+  checkoutcontroller.editCheckoutAddress_Get
 );
 router.post(
   "/checkoutAddress/:id",
   userAuthenticated,
-  checkoutcontroller.update_address
+  checkoutcontroller.editCheckoutAddress_Post
 );
 router.post("/cod", userAuthenticated, checkoutcontroller.codController);
 router.post(
@@ -140,7 +140,7 @@ router.post(
 );
 
 //  .................... orders
-router.get("/userorders", userAuthenticated, ordercontroller.userorders);
+router.get("/userorders", userAuthenticated, ordercontroller.userOrders);
 router.get(
   "/orderDetails/:id",
   userAuthenticated,
@@ -169,39 +169,39 @@ router.post(
 );
 
 //  .................... cart
-router.get("/cart", userAuthenticated, cartcontroller.cart);
-router.post("/cart/:id", userAuthenticated, cartcontroller.add_cart);
+router.get("/cart", userAuthenticated, cartcontroller.userCart);
+router.post("/cart/:id", userAuthenticated, cartcontroller.addToCart);
 router.post(
   "/updatecart/:id",
   userAuthenticated,
-  cartcontroller.update_quantity
+  cartcontroller.updateQuantity
 );
-router.get("/removeitem/:id", userAuthenticated, cartcontroller.remove_item);
+router.get("/removeitem/:id", userAuthenticated, cartcontroller.removeItem);
 
 //  .................... wishlist
-router.get("/userwishlist", userAuthenticated, wishlistcontroller.userwishlist);
+router.get("/userwishlist", userAuthenticated, wishlistcontroller.userWishlist);
 router.post(
   "/wishlist/:id",
   userAuthenticated,
-  wishlistcontroller.add_wishlist
+  wishlistcontroller.addToWishlist
 );
 router.delete(
   "/removewishlist/:id",
   userAuthenticated,
-  wishlistcontroller.remove_wishlist
+  wishlistcontroller.removeWishlist
 );
 router.post(
   "/WishlistToCart/:id",
   userAuthenticated,
-  wishlistcontroller.go_to_cart
+  wishlistcontroller.goToCart
 );
 
 //  .................... wallet
-router.get("/userwallet", userAuthenticated, wishlistcontroller.userwallet);
+router.get("/userwallet", userAuthenticated, wishlistcontroller.userWallet);
 
 //  .................... coupon
-router.get("/usercoupon", userAuthenticated, couponcontroller.usercoupon);
-router.patch("/applyCoupon", userAuthenticated, couponcontroller.apply_coupon);
-router.delete("/removeCoupon", userAuthenticated, couponcontroller.remove_coupon);
+router.get("/usercoupon", userAuthenticated, couponcontroller.userCoupon);
+router.patch("/applyCoupon", userAuthenticated, couponcontroller.applyCoupon);
+router.delete("/removeCoupon", userAuthenticated, couponcontroller.removeCoupon);
 
 module.exports = router;

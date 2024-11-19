@@ -1,7 +1,7 @@
 const addressDB = require("../../models/address");
 const { logout } = require("./homeCtrl");
 
-const useraddress = async (req, res) => {
+const userAddress = async (req, res) => {
   try {
     const address = await addressDB.find({ user: req.user._id });
 
@@ -17,7 +17,7 @@ const useraddress = async (req, res) => {
   }
 };
 
-const get_address = async (req, res) => {
+const addAddress_Get = async (req, res) => {
   try {
     const address = await addressDB.findOne({ user: req.user._id });
 
@@ -33,7 +33,7 @@ const get_address = async (req, res) => {
   }
 };
 
-const add_address = async (req, res) => {
+const addAddress_Post = async (req, res) => {
   try {
     const address = new addressDB({
       user: req.user._id,
@@ -55,7 +55,7 @@ const add_address = async (req, res) => {
   }
 };
 
-const geteditAddress = async (req, res) => {
+const editAddress_Get = async (req, res) => {
   try {
     const addressId = req.params.id;
     const address = await addressDB.findById(addressId);
@@ -71,7 +71,7 @@ const geteditAddress = async (req, res) => {
   }
 };
 
-const editaddress = async (req, res) => {
+const editAddress_Post = async (req, res) => {
   try {
     const addressId = req.params.id;
 
@@ -94,7 +94,7 @@ const editaddress = async (req, res) => {
   }
 };
 
-const delete_address = async (req, res) => {
+const deleteAddress = async (req, res) => {
   try {
     const addressId = req.params.id;
 
@@ -105,10 +105,10 @@ const delete_address = async (req, res) => {
 };
 
 module.exports = {
-  useraddress,
-  get_address,
-  add_address,
-  geteditAddress,
-  editaddress,
-  delete_address,
+  userAddress,
+  addAddress_Get,
+  addAddress_Post,
+  editAddress_Get,
+  editAddress_Post,
+  deleteAddress,
 };

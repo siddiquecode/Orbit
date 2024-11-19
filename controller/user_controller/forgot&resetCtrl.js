@@ -4,7 +4,7 @@ const { totp } = require("otplib");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const forgot = (req, res) => {
+const forgot_Get = (req, res) => {
   if (req.session.user) {
     res.redirect("/forgototp");
   } else {
@@ -12,7 +12,7 @@ const forgot = (req, res) => {
   }
 };
 
-const forgotPost = async (req, res) => {
+const forgot_Post = async (req, res) => {
   try {
     const email = req.body.email;
 
@@ -51,7 +51,7 @@ const forgotPost = async (req, res) => {
   }
 };
 
-const forgototp = (req, res) => {
+const forgotOtp_Get = (req, res) => {
   try {
     res.render("user/forgotOTP", { errorMessage: req.flash("error") });
   } catch (error) {
@@ -59,7 +59,7 @@ const forgototp = (req, res) => {
   }
 };
 
-const forgototpPost = async (req, res) => {
+const forgotOtp_Post = async (req, res) => {
   try {
     const { otp1, otp2, otp3, otp4, otp5, otp6 } = req.body;
     const enteredOtp = `${otp1}${otp2}${otp3}${otp4}${otp5}${otp6}`;
@@ -92,30 +92,7 @@ const forgototpPost = async (req, res) => {
   }
 };
 
-const forgotresentOtp = async (req, res) => {
-  try {
-    const user = req.session.credential;
-
-    if (!user.email) {
-      return res.status(400).send("session expried or invalid");
-    }
-
-    const email = user.email;
-    console.log("post resend otp hits");
-    const secret = process.env.OTP_SECRET;
-    const token = totp.generate(secret);
-    console.log("resent OTP:", token);
-    const mailBody = `Your registration otp is ${token}`;
-    await mailSender(email, "Registration OTP", mailBody);
-    req.session.otp = token;
-
-    res.redirect("/forgototp");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const resetpassword = (req, res) => {
+const resetPassword_Get = (req, res) => {
   try {
     if (req.session.checkOtp) {
       res.render("user/resetPassword", { errorMessage: req.flash("error") });
@@ -127,7 +104,7 @@ const resetpassword = (req, res) => {
   }
 };
 
-const resetpasswordPost = async (req, res) => {
+const resetPassword_Post = async (req, res) => {
   try {
     if (!req.session.checkOtp) {
       return res.redirect("/userlogin");
@@ -168,12 +145,35 @@ const resetpasswordPost = async (req, res) => {
   }
 };
 
+const forgotResentOtp = async (req, res) => {
+  try {
+    const user = req.session.credential;
+
+    if (!user.email) {
+      return res.status(400).send("session expried or invalid");
+    }
+
+    const email = user.email;
+    console.log("post resend otp hits");
+    const secret = process.env.OTP_SECRET;
+    const token = totp.generate(secret);
+    console.log("resent OTP:", token);
+    const mailBody = `Your registration otp is ${token}`;
+    await mailSender(email, "Registration OTP", mailBody);
+    req.session.otp = token;
+
+    res.redirect("/forgototp");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
-  forgot,
-  forgotPost,
-  forgototp,
-  forgototpPost,
-  resetpassword,
-  resetpasswordPost,
-  forgotresentOtp,
+  forgot_Get,
+  forgot_Post,
+  forgotOtp_Get,
+  forgotOtp_Post,
+  resetPassword_Get,
+  resetPassword_Post,
+  forgotResentOtp,
 };

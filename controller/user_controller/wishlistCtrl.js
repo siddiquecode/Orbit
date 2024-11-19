@@ -3,7 +3,7 @@ const productDB = require("../../models/products");
 const WalletDB = require("../../models/wallet");
 const wishlistDB = require("../../models/wishlist");
 
-const userwishlist = async (req, res) => {
+const userWishlist = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 5;
@@ -55,7 +55,7 @@ const userwishlist = async (req, res) => {
   }
 };
 
-const add_wishlist = async (req, res) => {
+const addToWishlist = async (req, res) => {
   try {
     const productId = req.params.id;
     const user = req.user;
@@ -75,7 +75,7 @@ const add_wishlist = async (req, res) => {
         );
         return res.redirect("/userwishlist");
       }
-      
+
       const isProductInWishlist = userwish.items.some(
         (item) => item.productId.toString() === productId
       );
@@ -96,7 +96,7 @@ const add_wishlist = async (req, res) => {
   }
 };
 
-const remove_wishlist = async (req, res) => {
+const removeWishlist = async (req, res) => {
   try {
     const productId = req.params.id;
     const user = req.user;
@@ -128,7 +128,7 @@ const remove_wishlist = async (req, res) => {
   }
 };
 
-const go_to_cart = async (req, res) => {
+const goToCart = async (req, res) => {
   try {
     const productId = req.params.id;
     const user = req.user;
@@ -195,7 +195,7 @@ const go_to_cart = async (req, res) => {
   }
 };
 
-const userwallet = async (req, res) => {
+const userWallet = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
@@ -226,9 +226,9 @@ const userwallet = async (req, res) => {
 };
 
 module.exports = {
-  userwishlist,
-  add_wishlist,
-  remove_wishlist,
-  go_to_cart,
-  userwallet,
+  userWishlist,
+  addToWishlist,
+  removeWishlist,
+  goToCart,
+  userWallet,
 };

@@ -3,7 +3,7 @@ const { logout } = require("./homeCtrl");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const userprofile = async (req, res) => {
+const userProfile = async (req, res) => {
   try {
     res.render("user/profile", {
       user: req.user,
@@ -17,7 +17,7 @@ const userprofile = async (req, res) => {
   }
 };
 
-const edit_getprofile = async (req, res) => {
+const editProfile_Get = async (req, res) => {
   try {
     res.render("user/edit_profile", {
       user: req.user,
@@ -30,7 +30,7 @@ const edit_getprofile = async (req, res) => {
   }
 };
 
-const editprofile = async (req, res) => {
+const editProfile_Post = async (req, res) => {
   try {
     const userId = req.params.id;
 
@@ -60,7 +60,7 @@ const editprofile = async (req, res) => {
   }
 };
 
-const get_changepassword = async (req, res) => {
+const changePassword_Get = async (req, res) => {
   try {
     res.render("user/change_password", {
       user: req.user,
@@ -73,7 +73,7 @@ const get_changepassword = async (req, res) => {
   }
 };
 
-const changepassword = async (req, res) => {
+const changePassword_Post = async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
@@ -112,9 +112,9 @@ const changepassword = async (req, res) => {
 };
 
 module.exports = {
-  userprofile,
-  edit_getprofile,
-  editprofile,
-  get_changepassword,
-  changepassword,
+  userProfile,
+  editProfile_Get,
+  editProfile_Post,
+  changePassword_Get,
+  changePassword_Post,
 };

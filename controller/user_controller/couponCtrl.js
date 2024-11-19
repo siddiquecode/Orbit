@@ -1,7 +1,7 @@
 const cartDB = require("../../models/cart");
 const couponDB = require("../../models/coupon");
 
-const usercoupon = async (req, res) => {
+const userCoupon = async (req, res) => {
   try {
     const coupons = await couponDB.find();
 
@@ -16,7 +16,7 @@ const usercoupon = async (req, res) => {
   }
 };
 
-const apply_coupon = async (req, res) => {
+const applyCoupon = async (req, res) => {
   try {
     const { couponCode } = req.body;
     const user = req.user;
@@ -41,11 +41,9 @@ const apply_coupon = async (req, res) => {
     });
 
     if (!coupon) {
-      return res
-        .status(400)
-        .json({
-          message: "Coupon can be applied only once.",
-        });
+      return res.status(400).json({
+        message: "Coupon can be applied only once.",
+      });
     }
 
     let subtotal = 0;
@@ -100,7 +98,7 @@ const apply_coupon = async (req, res) => {
   }
 };
 
-const remove_coupon = async (req, res) => {
+const removeCoupon = async (req, res) => {
   try {
     const user = req.user;
     if (!user) {
@@ -132,7 +130,7 @@ const remove_coupon = async (req, res) => {
 };
 
 module.exports = {
-  usercoupon,
-  apply_coupon,
-  remove_coupon,
+  userCoupon,
+  applyCoupon,
+  removeCoupon,
 };

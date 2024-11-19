@@ -33,8 +33,8 @@ const fileFilter = (req, file, cb) => {
 };
 
 // .................... login & signup
-adminRouter.get("/", adminController.getLogin);
-adminRouter.post("/", adminController.postLogin);
+adminRouter.get("/", adminController.login_Get);
+adminRouter.post("/", adminController.login_Post);
 adminRouter.get(
   "/getdashboard",
   adminAuthenticated,
