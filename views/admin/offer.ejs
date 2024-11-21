@@ -180,26 +180,28 @@
                     </thead>
                     <tbody>
                         <% offers.forEach((offer, index) => { %>
-                            <tr>
-                                <td><%= (currentPage - 1) * 10 + (index + 1) %></td>
-                                <td><%= offer.offerType %></td>
-                                <td>
-                                    <% if (offer.offerType === "Category" && offer.category) { %>
-                                        <%= offer.category.categoryName %>
-                                    <% } else { %>
-                                        <%= offer.product.productName %>
-                                    <% } %>
-                                </td>
-                                <td><%= offer.discount %> %</td>
-                                <td>
-                                    <a href="/admin/editoffer/<%= offer._id %>">
-                                        <button class="edit-offer" style="margin-bottom: 5px;">Edit</button>
-                                    </a>
-                                    <a href="#">
-                                        <button class="delete-offer" data-url="/admin/deleteoffer/<%= offer._id %>" id="deleteBtn" style="margin-bottom: 5px;">Delete</button>
-                                    </a>
-                                </td>
-                            </tr>
+                          <tr>
+                            <td><%= (currentPage - 1) * 10 + (index + 1) %></td>
+                            <td><%= offer.offerType %></td>
+                            <td>
+                              <% if (offer.offerType === "Category" && offer.category) { %>
+                                <%= offer.category.categoryName %>
+                              <% } else if (offer.offerType === "Product" && offer.product) { %>
+                                <%= offer.product.productName %>
+                              <% } else { %>
+                                N/A
+                              <% } %>
+                            </td>
+                            <td><%= offer.discount %> %</td>
+                            <td>
+                              <a href="/admin/editoffer/<%= offer._id %>">
+                                <button class="edit-offer" style="margin-bottom: 5px;">Edit</button>
+                              </a>
+                              <a href="#">
+                                <button class="delete-offer" data-url="/admin/deleteoffer/<%= offer._id %>" id="deleteBtn" style="margin-bottom: 5px;">Delete</button>
+                              </a>
+                            </td>
+                          </tr>
                         <% }); %>
                     </tbody>
                 </table>
