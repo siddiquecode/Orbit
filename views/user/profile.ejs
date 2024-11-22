@@ -104,23 +104,19 @@
         .copy-button {
             margin-left: 10px;
             color: #212529;
-            border: 1px solid;
+            border: 1px solid rgba(0, 0, 0, 0.212);
             border-radius: 5px;
             padding: 5px 10px;
             cursor: pointer;
+            background-color: #fff;
         }
 
         .copy-button:hover {
-            background-color: #a19f9f6e;
+            background-color: #e0dada2a;
         }
 
-        .copy-message {
-            margin-left: 10px;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            color: green;
-            font-weight: bold;
+        .copy-button span{
+            margin-left: 5px;
         }
 
         .profile-form {
@@ -275,8 +271,9 @@
                     <p>
                         Referral Code: <%= user.referralCode ? user.referralCode : 'No referral code generated' %>
                         <% if (user.referralCode) { %>
-                            <button onclick="copyReferralCode()" class="copy-button"><i class="fa-solid fa-copy fa-bounce"></i></button>
-                            <span id="copyMessage" class="copy-message"></span>
+                            <span class="copy-button" onclick="copyReferralCode('<%= user.referralCode %>', this)">
+                                <i class="fa-solid fa-copy"></i><span>copy</span>
+                            </span>
                         <% } %>
                     </p>
                 </div>
@@ -301,7 +298,6 @@
                         </div>
                         <div class="form-group">
                         <div class="email-container">
-                            <!-- <a href="editEmail" class="edit-form">Edit</a> -->
                             <label for="email">Email Address</label>
                             <input type="email" id="email" name="email" value="<%= user.email %>" disabled>
                         </div>
@@ -322,25 +318,18 @@
     <script>
 
         // copy referral code
-        function copyReferralCode() {
-            const referralCode = "<%= user.referralCode %>";
-            const textarea = document.createElement("textarea");
-            textarea.value = referralCode;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
+        function copyReferralCode(referralCode, buttonElement) {
+                navigator.clipboard.writeText(referralCode).then(() => {
+                    const spanElement = buttonElement.querySelector('span');
+                    spanElement.textContent = 'Copied';
 
-            const copyMessage = document.getElementById("copyMessage");
-            copyMessage.textContent = "Copied!";
-
-            copyMessage.style.border = "1px solid black";
-
-            setTimeout(() => {
-                copyMessage.textContent = "";
-                copyMessage.style.border = "";
-            }, 1500);
-        }
+                    setTimeout(() => {
+                        spanElement.textContent = 'Copy';
+                    }, 1500);
+                }).catch((error) => {
+                    console.error('Failed to copy text: ', error);
+                });
+            }
 
     </script>
 
